@@ -64,6 +64,7 @@ Tensor t3 = new Tensor(new double[] {1, 2, 3}, new int[] {3});
 
 cb.put(t1, "x").put(t2, "w").put(t3, "b");
 cb.affine("x", "w", "b").get().printData();
+//간단한 연산은 이름을 지정하지 않고 비워두어도 연산 가능
 ```
 
 출력:
