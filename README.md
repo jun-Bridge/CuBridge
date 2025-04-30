@@ -4,6 +4,8 @@
 모든 연산은 Tensor 객체를 기반으로 실행되며, RAM/VRAM을 자동으로 분리하여 GPU 연산을 지원합니다.
 
 > A lightweight Java tensor engine with automatic GPU acceleration via CUDA.
+> 
+> **주의: 이 프로젝트는 아직 안정 버전이 아닙니다. 실사용 시 주의하십시오.**
 
 ---
 
