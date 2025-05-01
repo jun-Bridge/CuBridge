@@ -26,16 +26,16 @@
 
 1. Eclipse에서 `Project → Properties → Java Build Path` 열기
 2. `Libraries` 탭으로 이동 → classpath 클릭 후 **[Add External JARs...]** 클릭
-3. 다운로드에서 프로젝트 폴더로 옮긴 `cubridge.jar` 선택 → 적용
+3. 다운로드에서 프로젝트 폴더로 옮긴 `CuBridge.jar` 선택 → 적용
 
 ---
 
 ### 2. DLL(native library) 경로 연결
 
-1. `Libraries` 탭에서 `cubridge.jar` 우측 ▼ 클릭
+1. `Libraries` 탭에서 `CuBridge.jar` 우측 ▼ 클릭
 2. **Native library location → Edit**
 3. `External Folder...` 선택
-4. `cubridge.dll`이 들어 있는 폴더 선택
+4. `CuBridgeDriver.dll`이 들어 있는 폴더 선택
 5. OK → Apply
 
 > 주의: `dll`은 `jar` 내부가 아니라 별도 폴더에 있어야 합니다!
@@ -47,7 +47,7 @@
 1. 동일하게 `cubridge.jar` 우측 ▼ 클릭
 2. **Javadoc location → Edit**
 3. 선택지 중 하나:
-   - `Javadoc in archive` → `cubridge-javadoc.jar` 선택
+   - `Javadoc in archive` → `cubridge-javadoc.jar` 혹은 `CuBridge.jar` 선택
    - 또는 `Javadoc in folder` → `docs/` 가 저장되어 있는 폴더 선택
 4. 확인 → Apply
 
