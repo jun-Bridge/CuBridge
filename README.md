@@ -6,6 +6,7 @@
 > A lightweight Java tensor engine with automatic GPU acceleration via CUDA.
 > 
 > **주의: 이 프로젝트는 아직 안정 버전이 아닙니다. 실사용 시 주의하십시오.**
+> 
 > 해당 프로젝트는 Alphabet Bridge 시리즈의 첫 프로젝트입니다.
 
 ---
