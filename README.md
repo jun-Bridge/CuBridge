@@ -6,6 +6,7 @@
 > A lightweight Java tensor engine with automatic GPU acceleration via CUDA.
 > 
 > **주의: 이 프로젝트는 아직 안정 버전이 아닙니다. 실사용 시 주의하십시오.**
+> 해당 프로젝트는 Alphabet Bridge 시리즈의 첫 프로젝트입니다.
 
 ---
 
@@ -14,7 +15,7 @@
 - Java + CUDA 연결 구조
 - Tensor 클래스 기반 고속 수치 연산 엔진
 - 환경적응형 라이브러리. GPU 여부, CUDA 여부에 따라 연산 설정 분기
-- VRAM 크기에 따른 데이터 주 저장 설정 분기 // 4GB, VRAM or RAM
+- VRAM 크기에 따른 데이터 주 저장 설정 분기 // 4GB 기준, VRAM or RAM
 - Javadoc 연동 및 IDE 지원
 - DLL 기반 JNI 연동
 
@@ -22,36 +23,11 @@
 
 ##  설치 방법 (Eclipse 기준)
 
-### 1. `cubridge.jar` 프로젝트에 추가
+### `CuBridge.jar` 프로젝트에 추가
 
 1. Eclipse에서 `Project → Properties → Java Build Path` 열기
 2. `Libraries` 탭으로 이동 → classpath 클릭 후 **[Add External JARs...]** 클릭
 3. 다운로드에서 프로젝트 폴더로 옮긴 `CuBridge.jar` 선택 → 적용
-
----
-
-### 2. DLL(native library) 경로 연결
-
-1. `Libraries` 탭에서 `CuBridge.jar` 우측 ▼ 클릭
-2. **Native library location → Edit**
-3. `External Folder...` 선택
-4. `CuBridgeDriver.dll`이 들어 있는 폴더 선택
-5. OK → Apply
-
-> 주의: `dll`은 `jar` 내부가 아니라 별도 폴더에 있어야 합니다!
-
----
-
-### 3. Javadoc 연결
-
-1. 동일하게 `cubridge.jar` 우측 ▼ 클릭
-2. **Javadoc location → Edit**
-3. 선택지 중 하나:
-   - `Javadoc in archive` → `cubridge-javadoc.jar` 혹은 `CuBridge.jar` 선택
-   - 또는 `Javadoc in folder` → `docs/` 가 저장되어 있는 폴더 선택
-4. 확인 → Apply
-
-이제 IDE에서 함수 이름에 마우스를 올리면 설명이 바로 표시됩니다.
 
 ---
 
@@ -79,7 +55,7 @@ Tensor(shape=[3, 3]):
 
 ---
 
-##  디렉토리 구조 예시
+##  디렉토리 구조
 
 ```
 CuBridge/
@@ -87,13 +63,13 @@ CuBridge/
 │  ├─ CuBridgeJNI.java
 │  ├─ CuBridge.java
 │  ├─ Tensor.java
-├─ cubridge.jar
-├─ lib /
-│  ├─cubridge.dll
+├─ dll /
+│  ├─CuBridgeDriver.dll
+│  ├─CuBridgeCudaC.dll
 ├─ doc /
-│  ├─cubridge-javadoc.jar
-├─ README.md
-├─ LICENSE
+├─ CuBridgeJNI.class
+├─ CuBridge.class
+├─ Tensor.class
 ```
 
 ---
