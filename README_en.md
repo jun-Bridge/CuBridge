@@ -1,60 +1,38 @@
 # CuBridge
 
-**CuBridge** is a lightweight Java-based tensor engine that bridges Java and CUDA to enable high-performance numerical computation.  
-All operations are executed on `Tensor` objects, with automatic separation between RAM and VRAM for GPU acceleration.
+**CuBridge** is a lightweight tensor computation engine that connects Java with CUDA to enable high-performance numerical operations.  
+All operations are performed based on the `Tensor` object, with automatic separation of RAM/VRAM for GPU acceleration.
 
-> A lightweight Java tensor engine with automatic GPU acceleration via CUDA.
+> A lightweight Java tensor engine with automatic GPU acceleration via CUDA.  
+> 
+> **Note: This project is not yet in a stable release. Use with caution in production.**  
+>
+> This is the first project in the Alphabet Bridge series.
 
-**!!! UNSTABLE !!! BE CAREFUL TO USE**
 ---
 
 ##  Key Features
 
-- Java + CUDA bridge architecture
-- High-speed tensor-based numerical engine
-- Environment-adaptive behavior: switches between CPU and GPU based on availability
-- Memory mode switching based on VRAM size (e.g., 4GB threshold for RAM/VRAM choice)
-- Full Javadoc integration and IDE support
-- JNI-based DLL interaction
+- Java + CUDA integration structure  
+- High-speed numerical computation engine based on the Tensor class  
+- Environment-adaptive library: automatically switches computation paths based on GPU/CUDA availability  
+- Automatically decides whether to use VRAM or RAM for main storage depending on VRAM size (default: 4GB threshold)  
+- Javadoc integration and IDE support  
+- JNI binding via DLL files  
 
 ---
 
-##  Installation (Eclipse Guide)
+##  Installation (Using Eclipse)
 
-### 1. Add `cubridge.jar` to your project
+### Add `CuBridge.jar` to your project
 
 1. In Eclipse, open `Project → Properties → Java Build Path`
-2. Go to the `Libraries` tab → click **[Add External JARs...]** under `Classpath`
-3. Select `cubridge.jar` (after placing it in your project folder) → Apply
+2. Go to the `Libraries` tab → click **[Add External JARs...]**
+3. Choose the `CuBridge.jar` file (move it to your project folder if necessary), then click Apply  
 
 ---
 
-### 2. Link native DLL (cubridge.dll)
-
-1. In the `Libraries` tab, click ▼ next to `cubridge.jar`
-2. Choose **Native library location → Edit**
-3. Select `External Folder...`
-4. Choose the folder where `cubridge.dll` is located
-5. Click OK → Apply
-
-> Note: The DLL must be outside the JAR, not embedded inside it.
-
----
-
-### 3. Attach Javadoc
-
-1. Again, click ▼ next to `cubridge.jar`
-2. Choose **Javadoc location → Edit**
-3. Options:
-   - `Javadoc in archive` → select `cubridge-javadoc.jar`
-   - or `Javadoc in folder` → choose the folder where `docs/` is stored
-4. Click OK → Apply
-
-Once connected, hovering over any function in your IDE will display its documentation.
-
----
-
-##  Example Usage
+##  Example Code
 
 ```java
 CuBridge cb = CuBridge.getInstance();
@@ -65,7 +43,7 @@ Tensor t3 = new Tensor(new double[] {1, 2, 3}, new int[] {3});
 
 cb.put(t1, "x").put(t2, "w").put(t3, "b");
 cb.affine("x", "w", "b").get().printData();
-// For simpler operations, you can omit the name and leave it empty
+// You may omit names for simpler operations
 ```
 
 Output:
@@ -78,7 +56,7 @@ Tensor(shape=[3, 3]):
 
 ---
 
-##  Example Directory Structure
+##  Directory Structure
 
 ```
 CuBridge/
@@ -86,18 +64,17 @@ CuBridge/
 │  ├─ CuBridgeJNI.java
 │  ├─ CuBridge.java
 │  ├─ Tensor.java
-├─ cubridge.jar
-├─ lib/
-│  ├─ cubridge.dll
+├─ dll/
+│  ├─ CuBridgeDriver.dll
+│  ├─ CuBridgeCudaC.dll
 ├─ doc/
-│  ├─ cubridge-javadoc.jar
-├─ README.md
-├─ README_en.md
-├─ LICENSE
+├─ CuBridgeJNI.class
+├─ CuBridge.class
+├─ Tensor.class
 ```
 
 ---
 
 ##  License
 
-This project is distributed under the terms of the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE).
