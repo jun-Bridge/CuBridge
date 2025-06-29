@@ -61,9 +61,10 @@ class CuBridgeJNI {
 	static native int[] getShape(String name);
 	static native boolean duple(String name, int usage);
 	static native boolean broad(String name, boolean broad);
+	static native boolean reshape(String name, int[] shape, int shapeLen);
 	
 	// 단항
-	static native boolean abs(String a, String out);	//하나 검색해서 그 이름으로 저장
+	static native boolean abs(String a, String out);
 	static native boolean neg(String a, String out);
 	static native boolean square(String a, String out);
 	static native boolean sqrt(String a, String out);
@@ -85,6 +86,10 @@ class CuBridgeJNI {
 	static native boolean ceil(String name, String out);
 	static native boolean floor(String name, String out);
 	static native boolean not(String a, String out);
+	static native boolean deg2rad(String name, String out);
+	static native boolean rad2deg(String name, String out);
+
+	
 	
 	// 이항
 	static native boolean add(String a, String b, String out);
@@ -105,19 +110,19 @@ class CuBridgeJNI {
 	//축 통합
 	static native boolean sum(String a, String out, int axis);
 	static native boolean mean(String a, String out, int axis);
-	static native boolean var(String a, String out, int aixs);
-	static native boolean std(String a, String out, int aixs);
+	static native boolean var(String a, String out, int axis);
+	static native boolean std(String a, String out, int axis);
 	static native boolean max(String a, String out, int axis);
 	static native boolean min(String a, String out, int axis);
 	
 	//축 독립
-	static native boolean accumulate(String a, String out, int aixs);
-	static native boolean compress(String a, String out, int aixs);	
-	static native boolean expand(String a, String out, int aixs, int expandN);
-	static native boolean argMax(String a, String out, int aixs);
-	static native boolean argMin(String a, String out, int aixs);	
-	static native boolean axisMax(String a, String out, int aixs);
-	static native boolean axisMin(String a, String out, int aixs);	
+	static native boolean accumulate(String a, String out, int axis);
+	static native boolean compress(String a, String out, int axis);	
+	static native boolean expand(String a, String out, int axis, int expandN);
+	static native boolean argMax(String a, String out, int axis);
+	static native boolean argMin(String a, String out, int axis);	
+	static native boolean axisMax(String a, String out, int axis);
+	static native boolean axisMin(String a, String out, int axis);	
 	static native boolean transpose(String name, String out, int axis1, int axis2);
 
 	//내적
@@ -129,7 +134,11 @@ class CuBridgeJNI {
 	static native boolean softmax(String name, String out, int axis);
 	static native boolean mse(String a, String b, String out);
 	static native boolean cee(String a, String b, String out);	
-	
+	static native boolean im2col1D(String input, String kernel, String out, int pad, int stride);
+	static native boolean col2im1D(String input, String kernel, String out, int oL, int pad, int stride);
+	static native boolean im2col2D(String input, String kernel, String out, int padH, int padW, int strideH, int strideW);
+	static native boolean col2im2D(String input, String kernel, String out, int oH, int oW, int padH, int padW, int strideH, int strideW);
+
 	
 	
 	

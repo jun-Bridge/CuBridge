@@ -389,7 +389,7 @@ public class CuBridge {
 	 * @return the retrieved tensor, or {@code null} if the queue is empty
 	 */
 	public Tensor get() {
-		if (!CuBridgeJNI.pop("")) {
+		if (!CuBridgeJNI.pop(genRandomName())) {
 			System.err.println("Error: Queue is empty!");
 			return null;
 		}
@@ -471,6 +471,31 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge broad(String name, boolean broad) {
+		if(!CuBridgeJNI.broad(name, broad))
+			System.err.println("Error: Failed to update broad for tensor '" + name + "' in the queue.");
+		return instance;
+	}
+	
+	/**
+	 * Reshapes the shape and size (slen) of the specified tensor.
+	 * <p>
+	 * Full parameter: {@code reshape(String name, int[] shape)}<br>
+	 * This operation:
+	 * <ul>
+	 *   <li>Changes the internal shape and size (slen) metadata of the specified tensor.</li>
+	 *   <li>The underlying data remains unchanged; only how it is interpreted changes.</li>
+	 *   <li>If the tensor does not exist in the queue, the operation fails silently.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param name   the name of the tensor in the queue
+	 * @param shape  the new shape to apply
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge reshape(String name, int[] shape) {
+		if(!CuBridgeJNI.reshape(name, shape, shape.length))
+			System.err.println("Error: Failed to update shape for tensor '" + name + "' in the queue.");
 		return instance;
 	}
 
@@ -492,7 +517,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge abs() {
-		if (!CuBridgeJNI.abs("", ""))
+		if (!CuBridgeJNI.abs("", genRandomName()))
 			System.err.println("ABS Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -516,7 +541,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge abs(String a) {
-		if (!CuBridgeJNI.abs(a, ""))
+		if (!CuBridgeJNI.abs(a, genRandomName()))
 			System.err.println("ABS Error: The " + a + " does not exist in Queue!");
 
 		return instance;
@@ -565,7 +590,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge neg() {
-		if (!CuBridgeJNI.neg("", ""))
+		if (!CuBridgeJNI.neg("", genRandomName()))
 			System.err.println("NEG Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -589,7 +614,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge neg(String a) {
-		if (!CuBridgeJNI.neg(a, ""))
+		if (!CuBridgeJNI.neg(a, genRandomName()))
 			System.err.println("NEG Error: The " + a + " does not exist in Queue!");
 
 		return instance;
@@ -638,7 +663,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge square() {
-		if (!CuBridgeJNI.square("", ""))
+		if (!CuBridgeJNI.square("", genRandomName()))
 			System.err.println("SQUARE Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -662,7 +687,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge square(String a) {
-		if (!CuBridgeJNI.square(a, ""))
+		if (!CuBridgeJNI.square(a, genRandomName()))
 			System.err.println("SQUARE Error: The " + a + " does not exist in Queue!");
 
 		return instance;
@@ -711,7 +736,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge sqrt() {
-		if (!CuBridgeJNI.sqrt("", ""))
+		if (!CuBridgeJNI.sqrt("", genRandomName()))
 			System.err.println("SQRT Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -735,7 +760,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge sqrt(String a) {
-		if (!CuBridgeJNI.sqrt(a, ""))
+		if (!CuBridgeJNI.sqrt(a, genRandomName()))
 			System.err.println("SQRT Error: The " + a + " does not exist in Queue!");
 
 		return instance;
@@ -784,7 +809,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge log() {
-		if (!CuBridgeJNI.log("", ""))
+		if (!CuBridgeJNI.log("", genRandomName()))
 			System.err.println("LOG Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -808,7 +833,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge log(String a) {
-		if (!CuBridgeJNI.log(a, ""))
+		if (!CuBridgeJNI.log(a, genRandomName()))
 			System.err.println("LOG Error: The " + a + " does not exist in Queue!");
 
 		return instance;
@@ -857,7 +882,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge log2() {
-		if (!CuBridgeJNI.log2("", ""))
+		if (!CuBridgeJNI.log2("", genRandomName()))
 			System.err.println("LOG_2 Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -881,7 +906,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge log2(String a) {
-		if (!CuBridgeJNI.log2(a, ""))
+		if (!CuBridgeJNI.log2(a, genRandomName()))
 			System.err.println("LOG_2 Error: The " + a + " does not exist in Queue!");
 
 		return instance;
@@ -930,7 +955,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge ln() {
-		if (!CuBridgeJNI.ln("", ""))
+		if (!CuBridgeJNI.ln("", genRandomName()))
 			System.err.println("LOG_e Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -954,7 +979,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge ln(String a) {
-		if (!CuBridgeJNI.ln(a, ""))
+		if (!CuBridgeJNI.ln(a, genRandomName()))
 			System.err.println("LOG_e Error: The " + a + " does not exist in Queue!");
 
 		return instance;
@@ -1003,7 +1028,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge reciprocal() {
-		if (!CuBridgeJNI.reciprocal("", ""))
+		if (!CuBridgeJNI.reciprocal("", genRandomName()))
 			System.err.println("REVERSE Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -1027,7 +1052,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge reciprocal(String a) {
-		if (!CuBridgeJNI.reciprocal(a, ""))
+		if (!CuBridgeJNI.reciprocal(a, genRandomName()))
 			System.err.println("REVERSE Error: The " + a + " does not exist in Queue!");
 
 		return instance;
@@ -1072,7 +1097,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge sin() {
-		if (!CuBridgeJNI.sin("", ""))
+		if (!CuBridgeJNI.sin("", genRandomName()))
 			System.err.println("SIN Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -1096,7 +1121,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge sin(String name) {
-		if (!CuBridgeJNI.sin(name, ""))
+		if (!CuBridgeJNI.sin(name, genRandomName()))
 			System.err.println("SIN Error: The " + name + " does not exist in Queue!");
 
 		return instance;
@@ -1140,7 +1165,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge cos() {
-		if (!CuBridgeJNI.cos("", ""))
+		if (!CuBridgeJNI.cos("", genRandomName()))
 			System.err.println("COS Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -1164,7 +1189,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge cos(String name) {
-		if (!CuBridgeJNI.cos(name, ""))
+		if (!CuBridgeJNI.cos(name, genRandomName()))
 			System.err.println("COS Error: The " + name + " does not exist in Queue!");
 
 		return instance;
@@ -1208,7 +1233,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge tan() {
-		if (!CuBridgeJNI.tan("", ""))
+		if (!CuBridgeJNI.tan("", genRandomName()))
 			System.err.println("TAN Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -1232,7 +1257,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge tan(String name) {
-		if (!CuBridgeJNI.tan(name, ""))
+		if (!CuBridgeJNI.tan(name, genRandomName()))
 			System.err.println("TAN Error: The " + name + " does not exist in Queue!");
 
 		return instance;
@@ -1278,7 +1303,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge step() {
-		if (!CuBridgeJNI.step("", ""))
+		if (!CuBridgeJNI.step("", genRandomName()))
 			System.err.println("STEP Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -1304,7 +1329,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge step(String name) {
-		if (!CuBridgeJNI.step(name, ""))
+		if (!CuBridgeJNI.step(name, genRandomName()))
 			System.err.println("STEP Error: The " + name + " does not exist in Queue!");
 
 		return instance;
@@ -1357,7 +1382,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge sigmoid() {
-		if (!CuBridgeJNI.sigmoid("", ""))
+		if (!CuBridgeJNI.sigmoid("", genRandomName()))
 			System.err.println("SIGMOID Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -1383,7 +1408,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge sigmoid(String name) {
-		if (!CuBridgeJNI.sigmoid(name, ""))
+		if (!CuBridgeJNI.sigmoid(name, genRandomName()))
 			System.err.println("SIGMOID Error: The " + name + " does not exist in Queue!");
 
 		return instance;
@@ -1436,7 +1461,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge tanh() {
-		if (!CuBridgeJNI.tanh("", ""))
+		if (!CuBridgeJNI.tanh("", genRandomName()))
 			System.err.println("TANH Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -1462,7 +1487,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge tanh(String name) {
-		if (!CuBridgeJNI.tanh(name, ""))
+		if (!CuBridgeJNI.tanh(name, genRandomName()))
 			System.err.println("TANH Error: The " + name + " does not exist in Queue!");
 
 		return instance;
@@ -1515,7 +1540,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge relu() {
-		if (!CuBridgeJNI.ReLu("", ""))
+		if (!CuBridgeJNI.ReLu("", genRandomName()))
 			System.err.println("RELU Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -1542,7 +1567,7 @@ public class CuBridge {
 	 */
 
 	public CuBridge relu(String name) {
-		if (!CuBridgeJNI.ReLu(name, ""))
+		if (!CuBridgeJNI.ReLu(name, genRandomName()))
 			System.err.println("RELU Error: The " + name + " does not exist in Queue!");
 
 		return instance;
@@ -1595,7 +1620,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge leakrelu() {
-		if (!CuBridgeJNI.leakReLu("", ""))
+		if (!CuBridgeJNI.leakReLu("", genRandomName()))
 			System.err.println("LEAKRELU Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -1621,7 +1646,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge leakrelu(String name) {
-		if (!CuBridgeJNI.leakReLu(name, ""))
+		if (!CuBridgeJNI.leakReLu(name, genRandomName()))
 			System.err.println("LEAKRELU Error: The " + name + " does not exist in Queue!");
 
 		return instance;
@@ -1674,7 +1699,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge softplus() {
-		if (!CuBridgeJNI.softplus("", ""))
+		if (!CuBridgeJNI.softplus("", genRandomName()))
 			System.err.println("SOFTPLUS Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -1700,7 +1725,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge softplus(String name) {
-		if (!CuBridgeJNI.softplus(name, ""))
+		if (!CuBridgeJNI.softplus(name, genRandomName()))
 			System.err.println("SOFTPLUS Error: The " + name + " does not exist in Queue!");
 
 		return instance;
@@ -1753,7 +1778,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge exp() {
-		if (!CuBridgeJNI.exp("", ""))
+		if (!CuBridgeJNI.exp("", genRandomName()))
 			System.err.println("EXP Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -1779,7 +1804,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge exp(String name) {
-		if (!CuBridgeJNI.exp(name, ""))
+		if (!CuBridgeJNI.exp(name, genRandomName()))
 			System.err.println("EXP Error: The " + name + " does not exist in Queue!");
 
 		return instance;
@@ -1811,6 +1836,164 @@ public class CuBridge {
 
 		return instance;
 	}
+	
+	/**
+	 * Unary Operation (Angle Conversion)
+	 *
+	 * Converts the top tensor in the queue from degrees to radians.
+	 * <p>
+	 * Full parameter: {@code deg2rad(String name, String out)}<br>
+	 * This version:
+	 * <ul>
+	 * <li>The top tensor is selected automatically.</li>
+	 * <li>The result is stored under an auto-generated name.</li>
+	 * <li>Each element is converted using the formula: rad = deg × π / 180.</li>
+	 * <li>Operation is applied element-wise.</li>
+	 * <li>If no suitable tensor is found, the operation fails and an error message is printed.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge deg2rad() {
+		if (!CuBridgeJNI.deg2rad("", genRandomName()))
+			System.err.println("deg2rad Error: Tensor not exist in Queue!");
+
+		return instance;
+	}
+	
+	/**
+	 * Unary Operation (Angle Conversion)
+	 *
+	 * Converts the specified tensor from degrees to radians.
+	 * <p>
+	 * Full parameter: {@code deg2rad(String name, String out)}<br>
+	 * This version:
+	 * <ul>
+	 * <li>The result is stored under an auto-generated name.</li>
+	 * <li>Each element is converted using the formula: rad = deg × π / 180.</li>
+	 * <li>Operation is applied element-wise.</li>
+	 * <li>If the input tensor is missing, the operation fails and an error message is printed.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param name the name of the input tensor in degrees
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge deg2rad(String name) {
+		if (!CuBridgeJNI.deg2rad(name, genRandomName()))
+			System.err.println("deg2rad Error: The " + name + " does not exist in Queue!");
+
+		return instance;
+	}
+	
+	/**
+	 * Unary Operation (Angle Conversion)
+	 *
+	 * Converts the specified tensor from degrees to radians and stores the result.
+	 * <p>
+	 * Full parameter: {@code deg2rad(String name, String out)}<br>
+	 * This version:
+	 * <ul>
+	 * <li>The result is stored under the specified output name.</li>
+	 * <li>Each element is converted using the formula: rad = deg × π / 180.</li>
+	 * <li>Operation is applied element-wise.</li>
+	 * <li>If the input tensor is missing, the operation fails and an error message is printed.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param name the name of the input tensor in degrees
+	 * @param out the name for the output tensor in radians
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge deg2rad(String name, String out) {
+		if (!CuBridgeJNI.deg2rad(name, out))
+			System.err.println("deg2rad Error: The " + name + " does not exist in Queue!");
+
+		return instance;
+	}
+
+	/**
+	 * Unary Operation (Angle Conversion)
+	 *
+	 * Converts the top tensor in the queue from radians to degrees.
+	 * <p>
+	 * Full parameter: {@code rad2deg(String name, String out)}<br>
+	 * This version:
+	 * <ul>
+	 * <li>The top tensor is selected automatically.</li>
+	 * <li>The result is stored under an auto-generated name.</li>
+	 * <li>Each element is converted using the formula: deg = rad × 180 / π.</li>
+	 * <li>Operation is applied element-wise.</li>
+	 * <li>If no suitable tensor is found, the operation fails and an error message is printed.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge rad2deg() {
+		if (!CuBridgeJNI.rad2deg("", genRandomName()))
+			System.err.println("rad2deg Error: Tensor not exist in Queue!");
+
+		return instance;
+	}
+
+	/**
+	 * Unary Operation (Angle Conversion)
+	 *
+	 * Converts the specified tensor from radians to degrees.
+	 * <p>
+	 * Full parameter: {@code rad2deg(String name, String out)}<br>
+	 * This version:
+	 * <ul>
+	 * <li>The result is stored under an auto-generated name.</li>
+	 * <li>Each element is converted using the formula: deg = rad × 180 / π.</li>
+	 * <li>Operation is applied element-wise.</li>
+	 * <li>If the input tensor is missing, the operation fails and an error message is printed.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param name the name of the input tensor in radians
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge rad2deg(String name) {
+		if (!CuBridgeJNI.rad2deg(name, genRandomName()))
+			System.err.println("rad2deg Error: The " + name + " does not exist in Queue!");
+
+		return instance;
+	}
+	
+	/**
+	 * Unary Operation (Angle Conversion)
+	 *
+	 * Converts the specified tensor from radians to degrees and stores the result.
+	 * <p>
+	 * Full parameter: {@code rad2deg(String name, String out)}<br>
+	 * This version:
+	 * <ul>
+	 * <li>The result is stored under the specified output name.</li>
+	 * <li>Each element is converted using the formula: deg = rad × 180 / π.</li>
+	 * <li>Operation is applied element-wise.</li>
+	 * <li>If the input tensor is missing, the operation fails and an error message is printed.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param name the name of the input tensor in radians
+	 * @param out the name for the output tensor in degrees
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge rad2deg(String name, String out) {
+		if (!CuBridgeJNI.rad2deg(name, out))
+			System.err.println("rad2deg Error: The " + name + " does not exist in Queue!");
+
+		return instance;
+	}
 
 	/**
 	 * Unary Operation (Axis-Independent)
@@ -1831,7 +2014,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge round() {
-		if (!CuBridgeJNI.round("", ""))
+		if (!CuBridgeJNI.round("", genRandomName()))
 			System.err.println("ROUND Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -1856,7 +2039,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge round(String name) {
-		if (!CuBridgeJNI.round(name, ""))
+		if (!CuBridgeJNI.round(name, genRandomName()))
 			System.err.println("ROUND Error: The " + name + " does not exist in Queue!");
 
 		return instance;
@@ -1907,7 +2090,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge ceil() {
-		if (!CuBridgeJNI.ceil("", ""))
+		if (!CuBridgeJNI.ceil("", genRandomName()))
 			System.err.println("CEIL Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -1932,7 +2115,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge ceil(String name) {
-		if (!CuBridgeJNI.ceil(name, ""))
+		if (!CuBridgeJNI.ceil(name, genRandomName()))
 			System.err.println("CEIL Error: The " + name + " does not exist in Queue!");
 
 		return instance;
@@ -1983,7 +2166,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge floor() {
-		if (!CuBridgeJNI.floor("", ""))
+		if (!CuBridgeJNI.floor("", genRandomName()))
 			System.err.println("FLOOR Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -2008,7 +2191,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge floor(String name) {
-		if (!CuBridgeJNI.floor(name, ""))
+		if (!CuBridgeJNI.floor(name, genRandomName()))
 			System.err.println("FLOOR Error: The " + name + " does not exist in Queue!");
 
 		return instance;
@@ -2060,7 +2243,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge not() {
-		if (!CuBridgeJNI.not("", ""))
+		if (!CuBridgeJNI.not("", genRandomName()))
 			System.err.println("NOT Error: Tensor not exist in Queue!");
 
 		return instance;
@@ -2086,7 +2269,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge not(String a) {
-		if (!CuBridgeJNI.not(a, ""))
+		if (!CuBridgeJNI.not(a, genRandomName()))
 			System.err.println("NOT Error: The " + a + " does not exist in Queue!");
 
 		return instance;
@@ -2138,7 +2321,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge add() {
-		if (!CuBridgeJNI.add("", "", ""))
+		if (!CuBridgeJNI.add("", "", genRandomName()))
 			System.err.println("ADD Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -2162,7 +2345,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge add(String a) {
-		if (!CuBridgeJNI.add(a, "", ""))
+		if (!CuBridgeJNI.add(a, "", genRandomName()))
 			System.err.println("ADD Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -2187,7 +2370,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge add(String a, String b) {
-		if (!CuBridgeJNI.add(a, b, ""))
+		if (!CuBridgeJNI.add(a, b, genRandomName()))
 			System.err.println("ADD Error: The " + a + " or " + b + " does not exist in Queue!");
 		return instance;
 	}
@@ -2236,7 +2419,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge sub() {
-		if (!CuBridgeJNI.sub("", "", ""))
+		if (!CuBridgeJNI.sub("", "", genRandomName()))
 			System.err.println("SUB Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -2260,7 +2443,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge sub(String a) {
-		if (!CuBridgeJNI.sub(a, "", ""))
+		if (!CuBridgeJNI.sub(a, "", genRandomName()))
 			System.err.println("SUB Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -2285,7 +2468,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge sub(String a, String b) {
-		if (!CuBridgeJNI.sub(a, b, ""))
+		if (!CuBridgeJNI.sub(a, b, genRandomName()))
 			System.err.println("SUB Error: The " + a + " or " + b + " does not exist in Queue!");
 		return instance;
 	}
@@ -2334,7 +2517,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge mul() {
-		if (!CuBridgeJNI.mul("", "", ""))
+		if (!CuBridgeJNI.mul("", "", genRandomName()))
 			System.err.println("MUL Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -2358,7 +2541,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge mul(String a) {
-		if (!CuBridgeJNI.mul(a, "", ""))
+		if (!CuBridgeJNI.mul(a, "", genRandomName()))
 			System.err.println("MUL Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -2383,7 +2566,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge mul(String a, String b) {
-		if (!CuBridgeJNI.mul(a, b, ""))
+		if (!CuBridgeJNI.mul(a, b, genRandomName()))
 			System.err.println("MUL Error: The " + a + " or " + b + " does not exist in Queue!");
 		return instance;
 	}
@@ -2432,7 +2615,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge div() {
-		if (!CuBridgeJNI.div("", "", ""))
+		if (!CuBridgeJNI.div("", "", genRandomName()))
 			System.err.println("DIV Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -2456,7 +2639,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge div(String a) {
-		if (!CuBridgeJNI.div(a, "", ""))
+		if (!CuBridgeJNI.div(a, "", genRandomName()))
 			System.err.println("DIV Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -2481,7 +2664,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge div(String a, String b) {
-		if (!CuBridgeJNI.div(a, b, ""))
+		if (!CuBridgeJNI.div(a, b, genRandomName()))
 			System.err.println("DIV Error: The " + a + " or " + b + " does not exist in Queue!");
 		return instance;
 	}
@@ -2530,7 +2713,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge pow() {
-		if (!CuBridgeJNI.pow("", "", ""))
+		if (!CuBridgeJNI.pow("", "", genRandomName()))
 			System.err.println("POW Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -2554,7 +2737,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge pow(String a) {
-		if (!CuBridgeJNI.pow(a, "", ""))
+		if (!CuBridgeJNI.pow(a, "", genRandomName()))
 			System.err.println("POW Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -2579,7 +2762,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge pow(String a, String b) {
-		if (!CuBridgeJNI.pow(a, b, ""))
+		if (!CuBridgeJNI.pow(a, b, genRandomName()))
 			System.err.println("POW Error: The " + a + " or " + b + " does not exist in Queue!");
 		return instance;
 	}
@@ -2628,7 +2811,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge mod() {
-		if (!CuBridgeJNI.mod("", "", ""))
+		if (!CuBridgeJNI.mod("", "", genRandomName()))
 			System.err.println("MOD Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -2652,7 +2835,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge mod(String a) {
-		if (!CuBridgeJNI.mod(a, "", ""))
+		if (!CuBridgeJNI.mod(a, "", genRandomName()))
 			System.err.println("MOD Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -2677,7 +2860,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge mod(String a, String b) {
-		if (!CuBridgeJNI.mod(a, b, ""))
+		if (!CuBridgeJNI.mod(a, b, genRandomName()))
 			System.err.println("MOD Error: The " + a + " or " + b + " does not exist in Queue!");
 		return instance;
 	}
@@ -2727,7 +2910,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge gt() {
-		if (!CuBridgeJNI.gt("", "", ""))
+		if (!CuBridgeJNI.gt("", "", genRandomName()))
 			System.err.println("GreaterThan Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -2752,7 +2935,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge gt(String a) {
-		if (!CuBridgeJNI.gt(a, "", ""))
+		if (!CuBridgeJNI.gt(a, "", genRandomName()))
 			System.err.println("GreaterThan Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -2778,7 +2961,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge gt(String a, String b) {
-		if (!CuBridgeJNI.gt(a, b, ""))
+		if (!CuBridgeJNI.gt(a, b, genRandomName()))
 			System.err.println("GreaterThan Error: The " + a + " or " + b + " does not exist in Queue!");
 		return instance;
 	}
@@ -2829,7 +3012,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge lt() {
-		if (!CuBridgeJNI.lt("", "", ""))
+		if (!CuBridgeJNI.lt("", "", genRandomName()))
 			System.err.println("LessThan Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -2854,7 +3037,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge lt(String a) {
-		if (!CuBridgeJNI.lt(a, "", ""))
+		if (!CuBridgeJNI.lt(a, "", genRandomName()))
 			System.err.println("LessThan Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -2880,7 +3063,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge lt(String a, String b) {
-		if (!CuBridgeJNI.lt(a, b, ""))
+		if (!CuBridgeJNI.lt(a, b, genRandomName()))
 			System.err.println("LessThan Error: The " + a + " or " + b + " does not exist in Queue!");
 		return instance;
 	}
@@ -2931,7 +3114,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge ge() {
-		if (!CuBridgeJNI.ge("", "", ""))
+		if (!CuBridgeJNI.ge("", "", genRandomName()))
 			System.err.println("GreaterEqual Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -2956,7 +3139,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge ge(String a) {
-		if (!CuBridgeJNI.ge(a, "", ""))
+		if (!CuBridgeJNI.ge(a, "", genRandomName()))
 			System.err.println("GreaterEqual Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -2982,7 +3165,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge ge(String a, String b) {
-		if (!CuBridgeJNI.ge(a, b, ""))
+		if (!CuBridgeJNI.ge(a, b, genRandomName()))
 			System.err.println("GreaterEqual Error: The " + a + " or " + b + " does not exist in Queue!");
 		return instance;
 	}
@@ -3033,7 +3216,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge le() {
-		if (!CuBridgeJNI.le("", "", ""))
+		if (!CuBridgeJNI.le("", "", genRandomName()))
 			System.err.println("LessEqual Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -3058,7 +3241,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge le(String a) {
-		if (!CuBridgeJNI.le(a, "", ""))
+		if (!CuBridgeJNI.le(a, "", genRandomName()))
 			System.err.println("LessEqual Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -3084,7 +3267,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge le(String a, String b) {
-		if (!CuBridgeJNI.le(a, b, ""))
+		if (!CuBridgeJNI.le(a, b, genRandomName()))
 			System.err.println("LessEqual Error: The " + a + " or " + b + " does not exist in Queue!");
 		return instance;
 	}
@@ -3135,7 +3318,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge eq() {
-		if (!CuBridgeJNI.eq("", "", ""))
+		if (!CuBridgeJNI.eq("", "", genRandomName()))
 			System.err.println("Equal Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -3160,7 +3343,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge eq(String a) {
-		if (!CuBridgeJNI.eq(a, "", ""))
+		if (!CuBridgeJNI.eq(a, "", genRandomName()))
 			System.err.println("Equal Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -3186,7 +3369,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge eq(String a, String b) {
-		if (!CuBridgeJNI.eq(a, b, ""))
+		if (!CuBridgeJNI.eq(a, b, genRandomName()))
 			System.err.println("Equal Error: The " + a + " or " + b + " does not exist in Queue!");
 		return instance;
 	}
@@ -3237,7 +3420,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge ne() {
-		if (!CuBridgeJNI.ne("", "", ""))
+		if (!CuBridgeJNI.ne("", "", genRandomName()))
 			System.err.println("NotEqual Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -3262,7 +3445,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge ne(String a) {
-		if (!CuBridgeJNI.ne(a, "", ""))
+		if (!CuBridgeJNI.ne(a, "", genRandomName()))
 			System.err.println("NotEqual Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -3288,7 +3471,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge ne(String a, String b) {
-		if (!CuBridgeJNI.ne(a, b, ""))
+		if (!CuBridgeJNI.ne(a, b, genRandomName()))
 			System.err.println("NotEqual Error: The " + a + " or " + b + " does not exist in Queue!");
 		return instance;
 	}
@@ -3340,7 +3523,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge and() {
-		if (!CuBridgeJNI.and("", "", ""))
+		if (!CuBridgeJNI.and("", "", genRandomName()))
 			System.err.println("AND Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -3366,7 +3549,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge and(String a) {
-		if (!CuBridgeJNI.and(a, "", ""))
+		if (!CuBridgeJNI.and(a, "", genRandomName()))
 			System.err.println("AND Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -3393,7 +3576,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge and(String a, String b) {
-		if (!CuBridgeJNI.and(a, b, ""))
+		if (!CuBridgeJNI.and(a, b, genRandomName()))
 			System.err.println("AND Error: The " + a + " or " + b + " does not exist in Queue!");
 		return instance;
 	}
@@ -3446,7 +3629,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge or() {
-		if (!CuBridgeJNI.or("", "", ""))
+		if (!CuBridgeJNI.or("", "", genRandomName()))
 			System.err.println("OR Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -3472,7 +3655,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge or(String a) {
-		if (!CuBridgeJNI.or(a, "", ""))
+		if (!CuBridgeJNI.or(a, "", genRandomName()))
 			System.err.println("OR Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -3499,7 +3682,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge or(String a, String b) {
-		if (!CuBridgeJNI.or(a, b, ""))
+		if (!CuBridgeJNI.or(a, b, genRandomName()))
 			System.err.println("OR Error: The " + a + " or " + b + " does not exist in Queue!");
 		return instance;
 	}
@@ -3550,7 +3733,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge sum() {
-		if (!CuBridgeJNI.sum("", "", -1))
+		if (!CuBridgeJNI.sum("", genRandomName(), -1))
 			System.err.println("SUM Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -3574,7 +3757,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge sum(int axis) {
-		if (!CuBridgeJNI.sum("", "", axis))
+		if (!CuBridgeJNI.sum("", genRandomName(), axis))
 			System.err.println("SUM Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -3598,7 +3781,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge sum(String a) {
-		if (!CuBridgeJNI.sum(a, "", -1))
+		if (!CuBridgeJNI.sum(a, genRandomName(), -1))
 			System.err.println("SUM Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -3623,7 +3806,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge sum(String a, int axis) {
-		if (!CuBridgeJNI.sum(a, "", axis))
+		if (!CuBridgeJNI.sum(a, genRandomName(), axis))
 			System.err.println("SUM Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -3695,7 +3878,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge mean() {
-		if (!CuBridgeJNI.mean("", "", -1))
+		if (!CuBridgeJNI.mean("", genRandomName(), -1))
 			System.err.println("MEAN Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -3720,7 +3903,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge mean(int axis) {
-		if (!CuBridgeJNI.mean("", "", axis))
+		if (!CuBridgeJNI.mean("", genRandomName(), axis))
 			System.err.println("MEAN Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -3744,7 +3927,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge mean(String a) {
-		if (!CuBridgeJNI.mean(a, "", -1))
+		if (!CuBridgeJNI.mean(a, genRandomName(), -1))
 			System.err.println("MEAN Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -3770,7 +3953,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge mean(String a, int axis) {
-		if (!CuBridgeJNI.mean(a, "", axis))
+		if (!CuBridgeJNI.mean(a, genRandomName(), axis))
 			System.err.println("MEAN Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -3843,7 +4026,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge var() {
-		if (!CuBridgeJNI.var("", "", -1))
+		if (!CuBridgeJNI.var("", genRandomName(), -1))
 			System.err.println("VAR Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -3868,7 +4051,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge var(int axis) {
-		if (!CuBridgeJNI.var("", "", axis))
+		if (!CuBridgeJNI.var("", genRandomName(), axis))
 			System.err.println("VAR Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -3892,7 +4075,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge var(String a) {
-		if (!CuBridgeJNI.var(a, "", -1))
+		if (!CuBridgeJNI.var(a, genRandomName(), -1))
 			System.err.println("VAR Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -3918,7 +4101,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge var(String a, int axis) {
-		if (!CuBridgeJNI.var(a, "", axis))
+		if (!CuBridgeJNI.var(a, genRandomName(), axis))
 			System.err.println("VAR Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -3991,7 +4174,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge std() {
-		if (!CuBridgeJNI.std("", "", -1))
+		if (!CuBridgeJNI.std("", genRandomName(), -1))
 			System.err.println("STD Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -4016,7 +4199,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge std(int axis) {
-		if (!CuBridgeJNI.std("", "", axis))
+		if (!CuBridgeJNI.std("", genRandomName(), axis))
 			System.err.println("STD Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -4040,7 +4223,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge std(String a) {
-		if (!CuBridgeJNI.std(a, "", -1))
+		if (!CuBridgeJNI.std(a, genRandomName(), -1))
 			System.err.println("STD Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -4066,7 +4249,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge std(String a, int axis) {
-		if (!CuBridgeJNI.std(a, "", axis))
+		if (!CuBridgeJNI.std(a, genRandomName(), axis))
 			System.err.println("STD Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -4139,7 +4322,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge max() {
-		if (!CuBridgeJNI.max("", "", -1))
+		if (!CuBridgeJNI.max("", genRandomName(), -1))
 			System.err.println("MAX Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -4164,7 +4347,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge max(int axis) {
-		if (!CuBridgeJNI.max("", "", axis))
+		if (!CuBridgeJNI.max("", genRandomName(), axis))
 			System.err.println("MAX Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -4188,7 +4371,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge max(String a) {
-		if (!CuBridgeJNI.max(a, "", -1))
+		if (!CuBridgeJNI.max(a, genRandomName(), -1))
 			System.err.println("MAX Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -4214,7 +4397,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge max(String a, int axis) {
-		if (!CuBridgeJNI.max(a, "", axis))
+		if (!CuBridgeJNI.max(a, genRandomName(), axis))
 			System.err.println("MAX Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -4287,7 +4470,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge min() {
-		if (!CuBridgeJNI.min("", "", -1))
+		if (!CuBridgeJNI.min("", genRandomName(), -1))
 			System.err.println("MIN Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -4312,7 +4495,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge min(int axis) {
-		if (!CuBridgeJNI.min("", "", axis))
+		if (!CuBridgeJNI.min("", genRandomName(), axis))
 			System.err.println("MIN Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -4336,7 +4519,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge min(String a) {
-		if (!CuBridgeJNI.min(a, "", -1))
+		if (!CuBridgeJNI.min(a, genRandomName(), -1))
 			System.err.println("MIN Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -4362,7 +4545,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge min(String a, int axis) {
-		if (!CuBridgeJNI.min(a, "", axis))
+		if (!CuBridgeJNI.min(a, genRandomName(), axis))
 			System.err.println("MIN Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -4436,7 +4619,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge accumulate() {
-		if (!CuBridgeJNI.accumulate("", "", -1))
+		if (!CuBridgeJNI.accumulate("", genRandomName(), -1))
 			System.err.println("ACCUMULATE Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -4460,7 +4643,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge accumulate(int axis) {
-		if (!CuBridgeJNI.accumulate("", "", axis))
+		if (!CuBridgeJNI.accumulate("", genRandomName(), axis))
 			System.err.println("ACCUMULATE Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -4485,7 +4668,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge accumulate(String a) {
-		if (!CuBridgeJNI.accumulate(a, "", -1))
+		if (!CuBridgeJNI.accumulate(a, genRandomName(), -1))
 			System.err.println("ACCUMULATE Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -4510,7 +4693,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge accumulate(String a, int axis) {
-		if (!CuBridgeJNI.accumulate(a, "", axis))
+		if (!CuBridgeJNI.accumulate(a, genRandomName(), axis))
 			System.err.println("ACCUMULATE Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -4584,7 +4767,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge compress() {
-		if (!CuBridgeJNI.compress("", "", -1))
+		if (!CuBridgeJNI.compress("", genRandomName(), -1))
 			System.err.println("COMPRESS Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -4608,7 +4791,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge compress(int axis) {
-		if (!CuBridgeJNI.compress("", "", axis))
+		if (!CuBridgeJNI.compress("", genRandomName(), axis))
 			System.err.println("COMPRESS Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -4633,7 +4816,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge compress(String a) {
-		if (!CuBridgeJNI.compress(a, "", -1))
+		if (!CuBridgeJNI.compress(a, genRandomName(), -1))
 			System.err.println("COMPRESS Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -4658,7 +4841,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge compress(String a, int axis) {
-		if (!CuBridgeJNI.compress(a, "", axis))
+		if (!CuBridgeJNI.compress(a, genRandomName(), axis))
 			System.err.println("COMPRESS Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -4734,7 +4917,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge expand(int axis, int N) {
-		if (!CuBridgeJNI.expand("", "", axis, N))
+		if (!CuBridgeJNI.expand("", genRandomName(), axis, N))
 			System.err.println("EXPAND Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -4761,7 +4944,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge expand(String a, int axis, int N) {
-		if (!CuBridgeJNI.expand(a, "", axis, N))
+		if (!CuBridgeJNI.expand(a, genRandomName(), axis, N))
 			System.err.println("EXPAND Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -4813,7 +4996,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge argMax() {
-		if (!CuBridgeJNI.argMax("", "", -1))
+		if (!CuBridgeJNI.argMax("", genRandomName(), -1))
 			System.err.println("ARGMAX Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -4838,7 +5021,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge argMax(int axis) {
-		if (!CuBridgeJNI.argMax("", "", axis))
+		if (!CuBridgeJNI.argMax("", genRandomName(), axis))
 			System.err.println("ARGMAX Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -4864,7 +5047,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge argMax(String a) {
-		if (!CuBridgeJNI.argMax(a, "", -1))
+		if (!CuBridgeJNI.argMax(a, genRandomName(), -1))
 			System.err.println("ARGMAX Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -4890,7 +5073,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge argMax(String a, int axis) {
-		if (!CuBridgeJNI.argMax(a, "", axis))
+		if (!CuBridgeJNI.argMax(a, genRandomName(), axis))
 			System.err.println("ARGMAX Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -4941,7 +5124,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge argMin() {
-		if (!CuBridgeJNI.argMin("", "", -1))
+		if (!CuBridgeJNI.argMin("", genRandomName(), -1))
 			System.err.println("ARGMIN Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -4966,7 +5149,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge argMin(int axis) {
-		if (!CuBridgeJNI.argMin("", "", axis))
+		if (!CuBridgeJNI.argMin("", genRandomName(), axis))
 			System.err.println("ARGMIN Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -4992,7 +5175,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge argMin(String a) {
-		if (!CuBridgeJNI.argMin(a, "", -1))
+		if (!CuBridgeJNI.argMin(a, genRandomName(), -1))
 			System.err.println("ARGMIN Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -5018,7 +5201,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge argMin(String a, int axis) {
-		if (!CuBridgeJNI.argMin(a, "", axis))
+		if (!CuBridgeJNI.argMin(a, genRandomName(), axis))
 			System.err.println("ARGMIN Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -5069,7 +5252,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge axisMax() {
-		if (!CuBridgeJNI.axisMax("", "", -1))
+		if (!CuBridgeJNI.axisMax("", genRandomName(), -1))
 			System.err.println("AXISMAX Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -5094,7 +5277,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge axisMax(int axis) {
-		if (!CuBridgeJNI.axisMax("", "", axis))
+		if (!CuBridgeJNI.axisMax("", genRandomName(), axis))
 			System.err.println("AXISMAX Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -5120,7 +5303,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge axisMax(String a) {
-		if (!CuBridgeJNI.axisMax(a, "", -1))
+		if (!CuBridgeJNI.axisMax(a, genRandomName(), -1))
 			System.err.println("AXISMAX Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -5146,7 +5329,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge axisMax(String a, int axis) {
-		if (!CuBridgeJNI.axisMax(a, "", axis))
+		if (!CuBridgeJNI.axisMax(a, genRandomName(), axis))
 			System.err.println("AXISMAX Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -5197,7 +5380,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge axisMin() {
-		if (!CuBridgeJNI.axisMin("", "", -1))
+		if (!CuBridgeJNI.axisMin("", genRandomName(), -1))
 			System.err.println("AXISMIN Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -5222,7 +5405,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge axisMin(int axis) {
-		if (!CuBridgeJNI.axisMin("", "", axis))
+		if (!CuBridgeJNI.axisMin("", genRandomName(), axis))
 			System.err.println("AXISMIN Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -5248,7 +5431,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge axisMin(String a) {
-		if (!CuBridgeJNI.axisMin(a, "", -1))
+		if (!CuBridgeJNI.axisMin(a, genRandomName(), -1))
 			System.err.println("AXISMIN Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -5274,7 +5457,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge axisMin(String a, int axis) {
-		if (!CuBridgeJNI.axisMin(a, "", axis))
+		if (!CuBridgeJNI.axisMin(a, genRandomName(), axis))
 			System.err.println("AXISMIN Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -5323,7 +5506,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge transpose() {
-		if (!CuBridgeJNI.transpose("", "", 0, -1))
+		if (!CuBridgeJNI.transpose("", genRandomName(), 0, -1))
 			System.err.println("TRANSPOSE Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -5347,7 +5530,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge transpose(String a) {
-		if (!CuBridgeJNI.transpose(a, "", 0, -1))
+		if (!CuBridgeJNI.transpose(a, genRandomName(), 0, -1))
 			System.err.println("TRANSPOSE Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -5397,7 +5580,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge transpose(int axis1, int axis2) {
-		if (!CuBridgeJNI.transpose("", "", axis1, axis2))
+		if (!CuBridgeJNI.transpose("", genRandomName(), axis1, axis2))
 			System.err.println("TRANSPOSE Error: Tensor not exist OR axis too big in Queue!");
 		return instance;
 	}
@@ -5424,7 +5607,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge transpose(String a, int axis1, int axis2) {
-		if (!CuBridgeJNI.transpose(a, "", axis1, axis2))
+		if (!CuBridgeJNI.transpose(a, genRandomName(), axis1, axis2))
 			System.err.println("TRANSPOSE Error: The " + a + " does not exist OR axis too big in Queue!");
 		return instance;
 	}
@@ -5477,7 +5660,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge dot() {
-		if (!CuBridgeJNI.dot("", "", ""))
+		if (!CuBridgeJNI.dot("", "", genRandomName()))
 			System.err.println("DOT Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -5504,7 +5687,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge dot(String a) {
-		if (!CuBridgeJNI.dot(a, "", ""))
+		if (!CuBridgeJNI.dot(a, "", genRandomName()))
 			System.err.println("DOT Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -5532,7 +5715,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge dot(String a, String b) {
-		if (!CuBridgeJNI.dot(a, b, ""))
+		if (!CuBridgeJNI.dot(a, b, genRandomName()))
 			System.err.println("DOT Error: The " + a + " or " + b + " does not exist in Queue!");
 		return instance;
 	}
@@ -5587,7 +5770,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge matmul() {
-		if (!CuBridgeJNI.matmul("", "", ""))
+		if (!CuBridgeJNI.matmul("", "", genRandomName()))
 			System.err.println("MATMUL Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -5614,7 +5797,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge matmul(String a) {
-		if (!CuBridgeJNI.matmul(a, "", ""))
+		if (!CuBridgeJNI.matmul(a, "", genRandomName()))
 			System.err.println("MATMUL Error: The " + a + " does not exist in Queue!");
 		return instance;
 	}
@@ -5642,7 +5825,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge matmul(String a, String b) {
-		if (!CuBridgeJNI.matmul(a, b, ""))
+		if (!CuBridgeJNI.matmul(a, b, genRandomName()))
 			System.err.println("MATMUL Error: The " + a + " or " + b + " does not exist in Queue!");
 		return instance;
 	}
@@ -5696,7 +5879,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge mse() {
-		if (!CuBridgeJNI.mse("", "", ""))
+		if (!CuBridgeJNI.mse("", "", genRandomName()))
 			System.err.println("MSE Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -5721,7 +5904,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge mse(String yh) {
-		if (!CuBridgeJNI.mse(yh, "", ""))
+		if (!CuBridgeJNI.mse(yh, "", genRandomName()))
 			System.err.println("MSE Error: The " + yh + " does not exist in Queue!");
 		return instance;
 	}
@@ -5747,7 +5930,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge mse(String yh, String y) {
-		if (!CuBridgeJNI.mse(yh, y, ""))
+		if (!CuBridgeJNI.mse(yh, y, genRandomName()))
 			System.err.println("MSE Error: The " + yh + " or " + y + " does not exist in Queue!");
 		return instance;
 	}
@@ -5798,7 +5981,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge cee() {
-		if (!CuBridgeJNI.cee("", "", ""))
+		if (!CuBridgeJNI.cee("", "", genRandomName()))
 			System.err.println("CEE Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -5824,7 +6007,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge cee(String yh) {
-		if (!CuBridgeJNI.cee(yh, "", ""))
+		if (!CuBridgeJNI.cee(yh, "", genRandomName()))
 			System.err.println("CEE Error: The " + yh + " does not exist in Queue!");
 		return instance;
 	}
@@ -5851,7 +6034,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge cee(String yh, String y) {
-		if (!CuBridgeJNI.cee(yh, y, ""))
+		if (!CuBridgeJNI.cee(yh, y, genRandomName()))
 			System.err.println("CEE Error: The " + yh + " or " + y + " does not exist in Queue!");
 		return instance;
 	}
@@ -5904,7 +6087,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge affine() {
-		if (!CuBridgeJNI.affine("", "", "", ""))
+		if (!CuBridgeJNI.affine("", "", "", genRandomName()))
 			System.err.println("AFFINE Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -5931,7 +6114,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge affine(String x) {
-		if (!CuBridgeJNI.affine(x, "", "", ""))
+		if (!CuBridgeJNI.affine(x, "", "", genRandomName()))
 			System.err.println("AFFINE Error: The " + x + " does not exist in Queue!");
 		return instance;
 	}
@@ -5959,7 +6142,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge affine(String x, String w) {
-		if (!CuBridgeJNI.affine(x, w, "", ""))
+		if (!CuBridgeJNI.affine(x, w, "", genRandomName()))
 			System.err.println("AFFINE Error: The " + x + " or " + w + " does not exist in Queue!");
 		return instance;
 	}
@@ -5988,7 +6171,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge affine(String x, String w, String b) {
-		if (!CuBridgeJNI.affine(x, w, b, ""))
+		if (!CuBridgeJNI.affine(x, w, b, genRandomName()))
 			System.err.println("AFFINE Error: The " + x + " or " + w + " or " + b + " does not exist in Queue!");
 		return instance;
 	}
@@ -6042,7 +6225,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge softmax() {
-		if (!CuBridgeJNI.softmax("", "", 1))
+		if (!CuBridgeJNI.softmax("", genRandomName(), 1))
 			System.err.println("SOFTMAX Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -6068,7 +6251,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge softmax(String name) {
-		if (!CuBridgeJNI.softmax(name, "", 1))
+		if (!CuBridgeJNI.softmax(name, genRandomName(), 1))
 			System.err.println("SOFTMAX Error: The " + name + " does not exist in Queue!");
 		return instance;
 	}
@@ -6120,7 +6303,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge softmax(int axis) {
-		if (!CuBridgeJNI.softmax("", "", axis))
+		if (!CuBridgeJNI.softmax("", genRandomName(), axis))
 			System.err.println("SOFTMAX Error: Tensor not exist in Queue!");
 		return instance;
 	}
@@ -6147,7 +6330,7 @@ public class CuBridge {
 	 * @return CuBridge instance for chaining
 	 */
 	public CuBridge softmax(String name, int axis) {
-		if (!CuBridgeJNI.softmax(name, "", axis))
+		if (!CuBridgeJNI.softmax(name, genRandomName(), axis))
 			System.err.println("SOFTMAX Error: The " + name + " does not exist in Queue!");
 		return instance;
 	}
@@ -6176,6 +6359,446 @@ public class CuBridge {
 	public CuBridge softmax(String name, String out, int axis) {
 		if (!CuBridgeJNI.softmax(name, out, axis))
 			System.err.println("SOFTMAX Error: The " + name + " does not exist in Queue!");
+		return instance;
+	}
+	
+	/**
+	 * Transformation Operation (im2col 1D)
+	 *
+	 * Converts a 1D input tensor into column format using a 1D kernel tensor.
+	 *
+	 * <p>
+	 * Full parameter: {@code im2col1D(String input, String kernel, String out, int pad, int stride)}<br>
+	 * This version:
+	 * <ul>
+	 *   <li>The input tensor must be 2D or 3D (shape: [N, W] or [N, C, W]).</li>	
+	 *   <li>Applies zero padding and unit stride (pad = 0, stride = 1).</li>
+	 *   <li>Both input and kernel tensors must exist in the queue.</li>
+	 *   <li>The result is stored under the specified output name.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param input  the name of the input tensor
+	 * @param kernel the name of the kernel tensor
+	 * @param out    the name for the output tensor
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge im2col1D(String input, String kernel, String out) {
+		if(!CuBridgeJNI.im2col1D(input, kernel, out, 0, 1))
+			System.err.println("im2col1D Error: Failed to transform input '" + input + "'. Please verify tensor existence and parameters.");
+		
+		return instance;
+	}
+	
+	/**
+	 * Transformation Operation (im2col 1D)
+	 *
+	 * Converts a 1D input tensor into column format using a kernel and specified padding.
+	 *
+	 * <p>
+	 * Full parameter: {@code im2col1D(String input, String kernel, String out, int pad, int stride)}<br>
+	 * This version:
+	 * <ul>
+	 *   <li>The input tensor must be 2D or 3D (shape: [N, W] or [N, C, W]).</li>	
+	 *   <li>Uses the given padding and default stride = 1.</li>
+	 *   <li>Padding is applied symmetrically to both sides.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param input  the name of the input tensor
+	 * @param kernel the name of the kernel tensor
+	 * @param out    the name for the output tensor
+	 * @param pad    padding applied on both sides
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge im2col1D(String input, String kernel, String out, int pad) {
+		if(!CuBridgeJNI.im2col1D(input, kernel, out, pad, 1))
+			System.err.println("im2col1D Error: Failed to transform input '" + input + "'. Please verify tensor existence and parameters.");
+		
+		return instance;
+	}
+
+	/**
+	 * Transformation Operation (im2col 1D)
+	 *
+	 * Converts a 1D input tensor into column format using kernel, padding, and stride.
+	 *
+	 * <p>
+	 * Full parameter: {@code im2col1D(String input, String kernel, String out, int pad, int stride)}<br>
+	 * This version:
+	 * <ul>
+	 *   <li>The input tensor must be 2D or 3D (shape: [N, W] or [N, C, W]).</li>	
+	 *   <li>All parameters explicitly provided: kernel, padding, stride.</li>
+	 *   <li>Supports arbitrary stride and padding values.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param input  the name of the input tensor
+	 * @param kernel the name of the kernel tensor
+	 * @param out    the name for the output tensor
+	 * @param pad    padding applied to both sides
+	 * @param stride stride value between kernel applications
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge im2col1D(String input, String kernel, String out, int pad, int stride) {
+		if(!CuBridgeJNI.im2col1D(input, kernel, out, pad, stride))
+			System.err.println("im2col1D Error: Failed to transform input '" + input + "'. Please verify tensor existence and parameters.");
+		
+		return instance;
+	}
+	
+	/**
+	 * Transformation Operation (col2im 1D)
+	 *
+	 * Reconstructs the original 1D input tensor from a column matrix.
+	 *
+	 * <p>
+	 * Full parameter: {@code col2im1D(String input, String kernel, String out, int oL, int pad, int stride)}<br>
+	 * This version:
+	 * <ul>
+	 *   <li>The input tensor must be 2D or 3D (shape: [N, W] or [N, C, W]).</li>	
+	 *   <li>Uses default output length = -1, padding = 0, stride = 1.</li>
+	 *   <li>Output shape is inferred when oL = -1.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param input  the name of the column input tensor
+	 * @param kernel the name of the kernel tensor
+	 * @param out    the name for the reconstructed output tensor
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge col2im1D(String input, String kernel, String out) {
+		if(!CuBridgeJNI.col2im1D(input, kernel, out, -1, 0, 1))
+			System.err.printf("col2im1D Error: Tensor '%s' or '%s' not found, or invalid parameters.\n", input, kernel);
+		
+		return instance;
+	}
+	
+	/**
+	 * Transformation Operation (col2im 1D)
+	 *
+	 * Reconstructs a 1D input tensor from column format using specified padding.
+	 *
+	 * <p>
+	 * Full parameter: {@code col2im1D(String input, String kernel, String out, int oL, int pad, int stride)}<br>
+	 * This version:
+	 * <ul>
+	 *   <li>The input tensor must be 2D or 3D (shape: [N, W] or [N, C, W]).</li>	
+	 *   <li>Uses default output length = -1 and stride = 1.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param input  the name of the column input tensor
+	 * @param kernel the name of the kernel tensor
+	 * @param out    the name for the output tensor
+	 * @param pad    padding applied during im2col1D
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge col2im1D(String input, String kernel, String out, int pad) {
+		if(!CuBridgeJNI.col2im1D(input, kernel, out, -1, pad, 1))
+			System.err.printf("col2im1D Error: Tensor '%s' or '%s' not found, or invalid parameters.\n", input, kernel);
+		
+		return instance;
+	}
+	
+	/**
+	 * Transformation Operation (col2im 1D)
+	 *
+	 * Reconstructs a 1D input tensor using padding and stride information.
+	 *
+	 * <p>
+	 * Full parameter: {@code col2im1D(String input, String kernel, String out, int oL, int pad, int stride)}<br>
+	 * This version:
+	 * <ul>
+	 *   <li>The input tensor must be 2D or 3D (shape: [N, W] or [N, C, W]).</li>	
+	 *   <li>Output length is still inferred (oL = -1).</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param input  the name of the column input tensor
+	 * @param kernel the name of the kernel tensor
+	 * @param out    the name for the output tensor
+	 * @param pad    padding used during im2col
+	 * @param stride stride used during im2col
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge col2im1D(String input, String kernel, String out, int pad, int stride) {
+		if(!CuBridgeJNI.col2im1D(input, kernel, out, -1, pad, stride))
+			System.err.printf("col2im1D Error: Tensor '%s' or '%s' not found, or invalid parameters.\n", input, kernel);
+		
+		return instance;
+	}
+	
+	/**
+	 * Transformation Operation (col2im 1D)
+	 *
+	 * Fully reconstructs a 1D input tensor from column format with all parameters specified.
+	 *
+	 * <p>
+	 * Full parameter: {@code col2im1D(String input, String kernel, String out, int oL, int pad, int stride)}<br>
+	 * This version:
+	 * <ul>
+	 *   <li>The input tensor must be 2D or 3D (shape: [N, W] or [N, C, W]).</li>	
+	 *   <li>Explicitly defines output length, padding, and stride.</li>
+	 *   <li>Ensures accurate inverse transformation of im2col1D.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param input  the name of the column input tensor
+	 * @param kernel the name of the kernel tensor
+	 * @param out    the name for the reconstructed output tensor
+	 * @param oL     original input length
+	 * @param pad    padding used during im2col
+	 * @param stride stride used during im2col
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge col2im1D(String input, String kernel, String out, int oL, int pad, int stride) {
+		if(!CuBridgeJNI.col2im1D(input, kernel, out, oL, pad, stride))
+			System.err.printf("col2im1D Error: Tensor '%s' or '%s' not found, or invalid parameters.\n", input, kernel);
+		
+		return instance;
+	}
+	
+	/**
+	 * Transformation Operation (im2col 2D)
+	 *
+	 * Converts a 2D input tensor into column format using a 2D kernel tensor.
+	 *
+	 * <p>
+	 * Full parameter: {@code im2col2D(String input, String kernel, String out, int padH, int padW, int strideH, int strideW)}<br>
+	 * This version:
+	 * <ul>
+	 *   <li>The input tensor must be 3D or 4D (shape: [N, H, W] or [N, C, H, W]).</li>
+	 *   <li>Applies symmetric padding = 0 and stride = 1.</li>
+	 *   <li>The result is stored under the specified output name.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param input   the name of the 2D input tensor
+	 * @param kernel  the name of the 2D kernel tensor
+	 * @param out     the name for the output tensor
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge im2col2D(String input, String kernel, String out) {
+		if(!CuBridgeJNI.im2col2D(input, kernel, out, 0, 0, 1, 1))
+			System.err.println("im2col2D Error: Failed to transform input '" + input + "'. Please verify tensor existence and parameters.");
+		
+		return instance;
+	}
+	
+	/**
+	 * Transformation Operation (im2col 2D)
+	 *
+	 * Converts a 2D input tensor into column format using symmetric padding.
+	 *
+	 * <p>
+	 * Full parameter: {@code im2col2D(String input, String kernel, String out, int padH, int padW, int strideH, int strideW)}<br>
+	 * This version:
+	 * <ul>
+	 *   <li>The input tensor must be 3D or 4D (shape: [N, H, W] or [N, C, H, W]).</li>
+	 *   <li>Applies the same padding to height and width (padH = padW = pad).</li>
+	 *   <li>Uses default stride = 1 for both dimensions.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param input   the name of the 2D input tensor
+	 * @param kernel  the name of the 2D kernel tensor
+	 * @param out     the name for the output tensor
+	 * @param pad     symmetric padding for height and width
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge im2col2D(String input, String kernel, String out, int pad) {
+		if(!CuBridgeJNI.im2col2D(input, kernel, out, pad, pad, 1, 1))
+			System.err.println("im2col2D Error: Failed to transform input '" + input + "'. Please verify tensor existence and parameters.");
+		
+		return instance;
+	}
+	
+	/**
+	 * Transformation Operation (im2col 2D)
+	 *
+	 * Converts a 2D input tensor into column format using symmetric padding and stride.
+	 *
+	 * <p>
+	 * Full parameter: {@code im2col2D(String input, String kernel, String out, int padH, int padW, int strideH, int strideW)}<br>
+	 * This version:
+	 * <ul>
+	 *   <li>The input tensor must be 3D or 4D (shape: [N, H, W] or [N, C, H, W]).</li>
+	 *   <li>Applies the same value for padding and stride on both dimensions.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param input   the name of the 2D input tensor
+	 * @param kernel  the name of the 2D kernel tensor
+	 * @param out     the name for the output tensor
+	 * @param pad     padding value for both height and width
+	 * @param stride  stride value for both height and width
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge im2col2D(String input, String kernel, String out, int pad, int stride) {
+		if(!CuBridgeJNI.im2col2D(input, kernel, out, pad, pad, stride, stride))
+			System.err.println("im2col2D Error: Failed to transform input '" + input + "'. Please verify tensor existence and parameters.");
+		
+		return instance;
+	}
+	
+	/**
+	 * Transformation Operation (im2col 2D)
+	 *
+	 * Converts a 2D input tensor into column format using full control over padding and stride.
+	 *
+	 * <p>
+	 * Full parameter: {@code im2col2D(String input, String kernel, String out, int padH, int padW, int strideH, int strideW)}<br>
+	 * This version:
+	 * <ul>
+	 *   <li>The input tensor must be 3D or 4D (shape: [N, H, W] or [N, C, H, W]).</li>
+	 *   <li>Supports asymmetric padding and non-uniform stride across height and width.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param input    the name of the 2D input tensor
+	 * @param kernel   the name of the 2D kernel tensor
+	 * @param out      the name for the output tensor
+	 * @param padH     padding height
+	 * @param padW     padding width
+	 * @param strideH  stride height
+	 * @param strideW  stride width
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge im2col2D(String input, String kernel, String out, int padH, int padW, int strideH, int strideW) {
+		if(!CuBridgeJNI.im2col2D(input, kernel, out, padH, padW, strideH, strideW))
+			System.err.println("im2col2D Error: Failed to transform input '" + input + "'. Please verify tensor existence and parameters.");
+		
+		return instance;
+	}
+	
+	/**
+	 * Transformation Operation (col2im 2D)
+	 *
+	 * Reconstructs the original 2D input tensor from a column matrix.
+	 *
+	 * <p>
+	 * Full parameter: {@code col2im2D(String input, String kernel, String out, int oH, int oW, int padH, int padW, int strideH, int strideW)}<br>
+	 * This version:
+	 * <ul>
+	 *   <li>The input tensor must be 3D or 4D (shape: [N, H, W] or [N, C, H, W]).</li>
+	 *   <li>Uses default output size = -1 and symmetric padding = 0, stride = 1.</li>
+	 *   <li>If output size is -1, it will be inferred from kernel and input shapes.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param input   the name of the column input tensor
+	 * @param kernel  the name of the kernel tensor
+	 * @param out     the name for the reconstructed output tensor
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge col2im2D(String input, String kernel, String out) {
+		if(!CuBridgeJNI.col2im2D(input, kernel, out, -1, -1, 0, 0, 1, 1))
+			System.err.println("col2im2D Error: Failed to transform input '" + input + "'. Please verify tensor existence and parameters.");
+		
+		return instance;
+	}
+	
+	/**
+	 * Transformation Operation (col2im 2D)
+	 *
+	 * Reconstructs a 2D input tensor using symmetric padding, with output size inferred.
+	 *
+	 * <p>
+	 * Full parameter: {@code col2im2D(String input, String kernel, String out, int oH, int oW, int padH, int padW, int strideH, int strideW)}<br>
+	 * This version:
+	 * <ul>
+	 *   <li>The input tensor must be 3D or 4D (shape: [N, H, W] or [N, C, H, W]).</li>
+	 *   <li>Uses oH = oW = -1 (auto-infer), stride = 1.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param input   the name of the column input tensor
+	 * @param kernel  the name of the kernel tensor
+	 * @param out     the name for the reconstructed output tensor
+	 * @param pad     symmetric padding used during im2col
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge col2im2D(String input, String kernel, String out, int pad) {
+		if(!CuBridgeJNI.col2im2D(input, kernel, out, -1, -1, pad, pad, 1, 1))
+			System.err.println("col2im2D Error: Failed to transform input '" + input + "'. Please verify tensor existence and parameters.");
+		
+		return instance;
+	}
+	
+	/**
+	 * Transformation Operation (col2im 2D)
+	 *
+	 * Reconstructs a 2D input tensor using symmetric padding and stride.
+	 *
+	 * <p>
+	 * Full parameter: {@code col2im2D(String input, String kernel, String out, int oH, int oW, int padH, int padW, int strideH, int strideW)}<br>
+	 * This version:
+	 * <ul>
+	 *   <li>The input tensor must be 3D or 4D (shape: [N, H, W] or [N, C, H, W]).</li>
+	 *   <li>Uses oH = oW = -1 (auto-infer).</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param input   the name of the column input tensor
+	 * @param kernel  the name of the kernel tensor
+	 * @param out     the name for the reconstructed output tensor
+	 * @param pad     symmetric padding used during im2col
+	 * @param stride  symmetric stride used during im2col
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge col2im2D(String input, String kernel, String out, int pad, int stride) {
+		if(!CuBridgeJNI.col2im2D(input, kernel, out, -1, -1, pad, pad, stride, stride))
+			System.err.println("col2im2D Error: Failed to transform input '" + input + "'. Please verify tensor existence and parameters.");
+		
+		return instance;
+	}
+
+	/**
+	 * Transformation Operation (col2im 2D)
+	 *
+	 * Fully reconstructs a 2D input tensor using all output and kernel parameters.
+	 *
+	 * <p>
+	 * Full parameter: {@code col2im2D(String input, String kernel, String out, int oH, int oW, int padH, int padW, int strideH, int strideW)}<br>
+	 * This version:
+	 * <ul>
+	 *   <li>The input tensor must be 3D or 4D (shape: [N, H, W] or [N, C, H, W]).</li>
+	 *   <li>All parameters are explicitly specified, including target output height and width.</li>
+	 *   <li>Should match the configuration used in the corresponding im2col2D operation.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param input    the name of the column input tensor
+	 * @param kernel   the name of the kernel tensor
+	 * @param out      the name for the reconstructed output tensor
+	 * @param oH       original input height
+	 * @param oW       original input width
+	 * @param padH     padding height
+	 * @param padW     padding width
+	 * @param strideH  stride height
+	 * @param strideW  stride width
+	 * @return CuBridge instance for chaining
+	 * @since v1.1
+	 */
+	public CuBridge col2im2D(String input, String kernel, String out, int oH, int oW, int padH, int padW, int strideH, int strideW) {
+		if(!CuBridgeJNI.col2im2D(input, kernel, out, oH, oW, padH, padW, strideH, strideW))
+			System.err.printf("col2im2D Error: Tensor '%s' or '%s' not found, or invalid parameters.\n", input, kernel);
+		
 		return instance;
 	}
 }

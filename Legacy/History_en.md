@@ -1,39 +1,66 @@
-# CuBridge Changelog (English)
+# CuBridge Changelog
 
 ## BETA
 
-- Verified integration between Java and C++/CUDA C
-- Established a triple memory structure: queue / map / buffer
-- Implemented core command flow: put / cal / get
-- Built dual memory model: cpu_ram / gpu_vram
-- Automatic environment detection
-- Added utility functions: auto, cal, ram, env, sysinfo, clear, visual queue/map, put, get
-- Added operations:
-    - Unary: abs, neg, square, sqrt, log, log_2, ln, reciprocal, sin, cos, tan, step, sigmoid, tanh, relu, leakRelu, softplus, exp, round, ceil, floor, not
-    - Binary: add, sub, mul, div, pow, mod, gt, lt, ge, le, eq, ne, and, or
-    - Axis-based: sum, mean, var, std, max, min
-    - Matrix: transpose, dot
-    - Neural Network: affine, cee, mse, softmax
+- Verified integration between Java and C++/CUDA C  
+- Established a triple memory structure: queue / map / buffer  
+- Implemented put / cal / get operation flow  
+- Designed dual memory system: cpu_ram / gpu_vram  
+- Automatic environment detection  
+- Functions added:
+  - auto, cal, ram, env, sysinfo, clear
+  - visual queue/map, put, get
+- Operations added:
+  - **Unary operations**:  
+    abs, neg, square, sqrt, log, log_2, ln, reciprocal, sin, cos, tan, step, sigmoid, tanh, relu, leakRelu, softplus, exp, round, ceil, floor, not
+  - **Binary operations**:  
+    add, sub, mul, div, pow, mod, gt, lt, ge, le, eq, ne, and, or
+  - **Axis-based operations**:  
+    sum, mean, var, std, max, min
+  - **Matrix operations**:  
+    transpose, dot
+  - **Neural network operations**:  
+    affine, cee, mse, softmax
+
+---
 
 ## Version 1.0
 
 - BETA stabilization:
-    - *Memory leak cleanup*
-    - Structural optimization
-    - Removed `map`, finalized dual structure: queue / buffer
-    - Removed VRAM policy for speed and simplicity
-    - Improved performance and stability
+  - Memory leak fixes
+  - Structural optimization
+  - Removed `map` and finalized queue/buffer dual structure
+  - Removed VRAM policy for improved speed and stability
 - Dependency resolution:
-    - CUDA system isolated and stabilized
+  - Separated and stabilized CUDA system
 - Deployment optimization:
-    - Now you only need a single JAR file!
-- Added functions: duple, broad, visualBuffer / visualAll
-- Enhanced operations:
-    - Split axis operations into **aggregated** and **independent**
-        - Aggregated operations combine all axes up to the specified one
-        - Independent operations only apply to the specified axis
-        - Aggregated: sum, mean, var, std, max, min
-        - Independent: accumulate, compress, expand, argmax, argmin, axisMax, axisMin
-    - Transpose optimization: speed-up and multi-axis support
-    - Dot product dualization: dot/matmul separated, auto-switched by shape
-    - Added axis argument to softmax
+  - Now runs with a single JAR file
+- Functions added:
+  - duple, broad, visualBuffer / All
+- Operation enhancements:
+  - Split axis operations into **aggregated** and **independent**
+    - Aggregated: sum, mean, var, std, max, min
+    - Independent: accumulate, compress, expand, argmax, argmin, axisMax, axisMin
+    - Aggregated ops combine all axes up to the specified one
+    - Independent ops apply only to the specified axis
+  - Transpose optimization:
+    - Improved performance and multi-axis support
+  - Dot product dualization:
+    - dot/matmul separated, internally bypassed depending on shape
+  - Axis argument added to softmax
+
+---
+
+## Version 1.1
+
+- Bug Fixes
+  - Fixed an issue in `transpose` where automatic axis inference using -1 caused reversed axis order.
+
+- New Operations
+  - `rad2deg`, `deg2rad`: Support for angle-to-radian and radian-to-angle conversion.
+  - `im2col1D`, `col2im1D`: Input/output restructuring functions for 1D convolution.
+  - `im2col2D`, `col2im2D`: Input/output restructuring functions for 2D convolution.
+  - `reshape`: Dynamically updates the shape and size (`sLen`) of a tensor within the queue.
+
+- Tensor Class Extension
+  - Added string-based tensor constructors: `Tensor(String[][])` and `Tensor(String[][], float)` for initialization from string arrays.

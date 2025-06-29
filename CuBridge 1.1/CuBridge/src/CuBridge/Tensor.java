@@ -1,4 +1,5 @@
 package CuBridge;
+
 import java.util.*;
 import java.io.*;
 /**
@@ -53,13 +54,13 @@ import java.io.*;
  * @author 배준호, 조선대 3학년
  * @since 1.0
  */
+import java.security.PublicKey;
+
 public class Tensor {
 	private double[] data = null;
 	private int[] shape = null;
 	private int len = 0;
 
-	
-	
 	private void print(String str) {
 		System.out.println(str);
 	}
@@ -77,7 +78,6 @@ public class Tensor {
 		return size;
 	}
 
-	
 	/**
 	 * Constructs an empty Tensor with no data or shape defined.
 	 */
@@ -87,9 +87,11 @@ public class Tensor {
 	/**
 	 * Constructs a 1-dimensional Tensor from a given array of doubles.
 	 * <ul>
-	 *   <li>The tensor will have shape (N), where N is the length of the input array.</li>
-	 *   <li>The input values are deep-copied for internal storage.</li>
+	 * <li>The tensor will have shape (N), where N is the length of the input
+	 * array.</li>
+	 * <li>The input values are deep-copied for internal storage.</li>
 	 * </ul>
+	 * 
 	 * @param data one-dimensional data values
 	 */
 	public Tensor(double... data) {
@@ -101,12 +103,14 @@ public class Tensor {
 	/**
 	 * Constructs a Tensor with the given data and shape.
 	 * <ul>
-	 *   <li>Validates whether the number of data points matches the product of the provided shape dimensions.</li>
-	 *   <li>If the shape is valid, it is applied directly.</li>
-	 *   <li>If a mismatch is detected, a warning is printed and the shape is automatically set to 1D (N,) format.</li>
+	 * <li>Validates whether the number of data points matches the product of the
+	 * provided shape dimensions.</li>
+	 * <li>If the shape is valid, it is applied directly.</li>
+	 * <li>If a mismatch is detected, a warning is printed and the shape is
+	 * automatically set to 1D (N,) format.</li>
 	 * </ul>
 	 *
-	 * @param data the flat data array
+	 * @param data  the flat data array
 	 * @param shape the intended shape dimensions
 	 */
 	public Tensor(double[] data, int... shape) {
@@ -115,18 +119,21 @@ public class Tensor {
 		this.len = data.length;
 
 		if (len != getLenFromShape()) {
-		    System.err.println("Warning: Shape mismatch detected. Overriding shape to 1D.");
-		    this.shape = new int[] { len };
+			System.err.println("Warning: Shape mismatch detected. Overriding shape to 1D.");
+			this.shape = new int[] { len };
 		}
 	}
 
 	/**
 	 * Loads a Tensor from a CSV file.
 	 * <ul>
-	 *   <li>The file must be structured as rows and columns of numerical data, comma-separated.</li>
-	 *   <li>Empty fields are automatically converted to 0.0.</li>
-	 *   <li>The resulting tensor will have shape (rows, columns) excluding the first line (assumed to be a header or label row).</li>
+	 * <li>The file must be structured as rows and columns of numerical data,
+	 * comma-separated.</li>
+	 * <li>Empty fields are automatically converted to 0.0.</li>
+	 * <li>The resulting tensor will have shape (rows, columns) excluding the first
+	 * line (assumed to be a header or label row).</li>
 	 * </ul>
+	 * 
 	 * @param path file path to the CSV file
 	 */
 	public Tensor(String path) {// TODO : 만약 다축 텐서의 경우 어떻게 저장하는가? // 야 이 csv가 다축일리가 있겠냐?
@@ -174,6 +181,55 @@ public class Tensor {
 	}
 
 	/**
+	 * Constructs a Tensor by converting a 2D string array to a numerical tensor.
+	 *
+	 * <p>
+	 * Full parameter: {@code Tensor(String[][] data, double norm)}<br>
+	 * This version:
+	 * <ul>
+	 *   <li>Uses a default normalization factor of 1 (no scaling).</li>
+	 *   <li>All string values are parsed into double precision values.</li>
+	 *   <li>The input must be rectangular (all rows equal length).</li>
+	 *   <li>Stored in column-major order: {@code data[c][r]} becomes {@code double[col * row + r]}.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param data the 2D string array representing numeric values
+	 * @since v1.1
+	 */
+	public Tensor(String[][] data) {
+		this(data, 1);
+	}
+	
+	/**
+	 * Constructs a Tensor by converting a 2D string array to a normalized numerical tensor.
+	 *
+	 * <p>
+	 * Full parameter: {@code Tensor(String[][] data, double norm)}<br>
+	 * This version:
+	 * <ul>
+	 *   <li>All string elements are parsed into doubles and divided by {@code norm}.</li>
+	 *   <li>Use this to scale raw string data (e.g., percentage normalization).</li>
+	 *   <li>The input must be a regular 2D array (same row lengths).</li>
+	 *   <li>Stored in column-major order: {@code data[c][r]} becomes {@code double[col * row + r]}.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param data the 2D string array representing numeric values
+	 * @param norm the normalization factor to divide each value by
+	 * @since v1.1
+	 */
+	public Tensor(String[][] data, double norm) {
+		int col = data.length;
+		int row = data[0].length;
+		this.data = new double[col * row];
+
+		for (int c = 0; c < col; c++)
+			for (int r = 0; r < row; r++)
+				this.data[col * row + r] = Double.parseDouble(data[c][r]) / norm;
+	}
+
+	/**
 	 * Returns a copy of the internal data array.
 	 *
 	 * @return cloned array containing tensor values
@@ -208,22 +264,21 @@ public class Tensor {
 	public int getAxis() {
 		return this.shape.length;
 	}
-	
+
 	/**
-	 * Prints the size (shape) of the tensor in a flat format.
-	 * Example: [3 4 5]
+	 * Prints the size (shape) of the tensor in a flat format. Example: [3 4 5]
 	 */
 	public void printSize() {
-		for(int i = 0; i < shape.length; i++)
-		System.out.print(this.shape[i]+" ");
+		for (int i = 0; i < shape.length; i++)
+			System.out.print(this.shape[i] + " ");
 		System.out.println();
 	}
 
 	/**
 	 * Pretty-prints the tensor data with shape information.
 	 * 
-	 * If the tensor is empty, prints a notice. Otherwise, recursively prints nested values
-	 * according to the tensor's shape structure.
+	 * If the tensor is empty, prints a notice. Otherwise, recursively prints nested
+	 * values according to the tensor's shape structure.
 	 */
 	public void printData() {
 		System.out.println("Tensor(shape=" + Arrays.toString(shape) + "):");
@@ -265,12 +320,13 @@ public class Tensor {
 	}
 
 	/**
-	 * Returns a string that displays the shape and the first few rows of the tensor.
+	 * Returns a string that displays the shape and the first few rows of the
+	 * tensor.
 	 * 
 	 * <ul>
-	 *   <li>Shows up to 6 rows of data.</li>
-	 *   <li>Each row displays values from the last dimension (columns).</li>
-	 *   <li>Intended for quick inspection of tensor contents.</li>
+	 * <li>Shows up to 6 rows of data.</li>
+	 * <li>Each row displays values from the last dimension (columns).</li>
+	 * <li>Intended for quick inspection of tensor contents.</li>
 	 * </ul>
 	 *
 	 * @return a formatted string preview of the tensor
@@ -311,7 +367,7 @@ public class Tensor {
 	public String toString() {
 		return "shape = " + Arrays.toString(shape);
 	}
-	
+
 	/**
 	 * Computes the total number of elements implied by the given shape.
 	 * 
@@ -324,7 +380,7 @@ public class Tensor {
 			size *= d;
 		return size;
 	}
-	
+
 	/**
 	 * Creates a tensor filled with the specified constant value.
 	 *
@@ -343,7 +399,7 @@ public class Tensor {
 
 		return t;
 	}
-	
+
 	/**
 	 * Creates a tensor filled with random values in the range [0.0, 1.0).
 	 *
@@ -355,15 +411,16 @@ public class Tensor {
 		t.shape = shape.clone();
 		t.len = getLenFromShape(shape);
 		t.data = new double[t.len];
-		
+
 		for (int i = 0; i < t.len; i++)
 			t.data[i] = Math.random();
 
 		return t;
 	}
-	
+
 	/**
-	 * Creates a tensor filled with standard normally distributed random values (mean = 0, std = 1).
+	 * Creates a tensor filled with standard normally distributed random values
+	 * (mean = 0, std = 1).
 	 *
 	 * @param shape the desired tensor shape
 	 * @return a new tensor with normally distributed random values
@@ -374,18 +431,19 @@ public class Tensor {
 		t.shape = shape.clone();
 		t.len = getLenFromShape(shape);
 		t.data = new double[t.len];
-		
+
 		for (int i = 0; i < t.len; i++)
 			t.data[i] = random.nextGaussian();
 
 		return t;
 	}
-	
+
 	/**
-	 * Creates a tensor filled with normally distributed random values with specified mean and standard deviation.
+	 * Creates a tensor filled with normally distributed random values with
+	 * specified mean and standard deviation.
 	 *
-	 * @param mean the mean of the distribution
-	 * @param std the standard deviation of the distribution
+	 * @param mean  the mean of the distribution
+	 * @param std   the standard deviation of the distribution
 	 * @param shape the desired tensor shape
 	 * @return a new tensor with normally distributed values
 	 */
@@ -395,7 +453,7 @@ public class Tensor {
 		t.shape = shape.clone();
 		t.len = getLenFromShape(shape);
 		t.data = new double[t.len];
-		
+
 		for (int i = 0; i < t.len; i++)
 			t.data[i] = std * random.nextGaussian() + mean;
 
@@ -441,11 +499,12 @@ public class Tensor {
 	}
 
 	/**
-	 * Creates a 1D tensor with values from {@code start} to less than {@code end}, with given {@code step}.
+	 * Creates a 1D tensor with values from {@code start} to less than {@code end},
+	 * with given {@code step}.
 	 *
 	 * @param start the starting value (inclusive)
-	 * @param end the end value (exclusive)
-	 * @param step the increment step (must be > 0)
+	 * @param end   the end value (exclusive)
+	 * @param step  the increment step (must be > 0)
 	 * @return a 1D tensor with range values
 	 */
 	public static Tensor arange(double start, double end, double step) {
@@ -471,11 +530,12 @@ public class Tensor {
 	}
 
 	/**
-	 * Creates a 1D tensor with {@code num} evenly spaced values between {@code start} and {@code end}.
+	 * Creates a 1D tensor with {@code num} evenly spaced values between
+	 * {@code start} and {@code end}.
 	 *
 	 * @param start the starting value (inclusive)
-	 * @param end the end value (inclusive)
-	 * @param num number of values to generate (must be ≥ 1)
+	 * @param end   the end value (inclusive)
+	 * @param num   number of values to generate (must be ≥ 1)
 	 * @return a 1D tensor with evenly spaced values
 	 */
 	public static Tensor linspace(double start, double end, int num) {
@@ -506,7 +566,7 @@ public class Tensor {
 	/**
 	 * Reshapes a given tensor into a new shape.
 	 *
-	 * @param src the original tensor
+	 * @param src      the original tensor
 	 * @param newShape the new desired shape
 	 * @return a reshaped tensor with the same data
 	 * @throws IllegalArgumentException if total size mismatches
@@ -533,6 +593,6 @@ public class Tensor {
 		return reshape(src, src.getSize());
 	}
 
-	//rand, randn
+	// rand, randn
 
 }
