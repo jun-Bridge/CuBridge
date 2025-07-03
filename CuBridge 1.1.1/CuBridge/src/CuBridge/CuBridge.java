@@ -389,7 +389,7 @@ public class CuBridge {
 	 * @return the retrieved tensor, or {@code null} if the queue is empty
 	 */
 	public Tensor get() {
-		if (!CuBridgeJNI.pop(genRandomName())) {
+		if (!CuBridgeJNI.pop("")) {
 			System.err.println("Error: Queue is empty!");
 			return null;
 		}

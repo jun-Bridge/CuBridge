@@ -64,3 +64,17 @@
 
 - Tensor Class Extension
   - Added string-based tensor constructors: `Tensor(String[][])` and `Tensor(String[][], float)` for initialization from string arrays.
+
+---
+
+## Version 1.1.1
+
+- Bug Fixes
+
+1. **Fixed queue name mismatch in `pop()`**
+   - Previously, `genRandomName()` was mistakenly called instead of `""`, causing the function to search for tensors with auto-generated names rather than the top of the queue.
+   - This critical bug caused `pop()` to always fail. It is now resolved.
+
+2. **Fixed incorrect broadcast direction**
+   - In binary operations, the broadcasting axis was incorrectly chosen, resulting in reversed broadcasting behavior.
+   - Example: When computing with shapes `{3,2}` and `{1,6}`, expansion was wrongly applied along the columns. It now correctly expands along the rows.
