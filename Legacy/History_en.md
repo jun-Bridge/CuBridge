@@ -78,3 +78,67 @@
 2. **Fixed incorrect broadcast direction**
    - In binary operations, the broadcasting axis was incorrectly chosen, resulting in reversed broadcasting behavior.
    - Example: When computing with shapes `{3,2}` and `{1,6}`, expansion was wrongly applied along the columns. It now correctly expands along the rows.
+
+
+--
+
+
+## Version 1.2
+
+- Bug Fixes and Feature Improvements
+
+### 1. Constant Tensor System Introduced
+
+**Key Features**
+- A tensor is recognized as a **constant** if its name starts with `'_'` and `usageCount < 0`.
+- Constants are **user-definable** (e.g., `_VAR1`, `_CUSTOM_CONST`, etc.).
+- All constants automatically set `broadcast = true`. User-defined constants can override it.
+- Constants are strictly **immutable**:
+  - Calling `setUsage`, `setBroad`, or `setReshape` will print a warning and ignore the change.
+  - Overwriting constants via `smartPush()` or duplicate `put()` will return an error.
+- Constants **cannot be used as output names** for any operation.
+  - Example: `cb.exp("a", "_PI")` -> Error (cannot overwrite constant `_PI`)
+
+#### Built-in Constants
+
+| Name         | Value           | Notes                    |
+|--------------|------------------|---------------------------|
+| `_ZERO`      | 0.0              | Basic zero constant       |
+| `_ONE`       | 1.0              | Identity operand          |
+| `_TWO`       | 2.0              | Square, exponentiation    |
+| `_THREE`     | 3.0              |                           |
+| `_FOUR`      | 4.0              |                           |
+| `_FIVE`      | 5.0              |                           |
+| `_SIX`       | 6.0              |                           |
+| `_SEVEN`     | 7.0              |                           |
+| `_EIGHT`     | 8.0              |                           |
+| `_NINE`      | 9.0              |                           |
+| `_HALF`      | 0.5              | Averaging, normalization  |
+| `_PI`        | 3.14159265359    | Trigonometric functions   |
+| `_E`         | 2.718281         | Exponential functions     |
+| `_EPSILON`   | 1e-6             | Numerical tolerance       |
+| `_RATE`      | 0.001            | Learning rate, etc.       |
+| `_NEG`       | -1.0             | Negative unit             |
+| `_HUNDRED`   | 100.0            | Percentage calculations   |
+| `_MAXPIXEL`  | 255.0            | Image normalization       |
+
+---
+
+### 2. Visual Series Enhancements
+
+- `visualQueue()` displays only variable tensors.
+- `visualQueueAll()` displays all tensors including constants.
+- Display format enhanced:
+  - Example: `Queue Size : 20 (Const : 18, Var : 2)`
+- Buffer visual output remains unchanged.
+
+---
+
+### 3. Standardized Error Message Format
+
+- All operation functions now follow a unified error format.
+- Error messages now include input and output tensor names for clearer diagnostics.
+
+**Example:**
+```text
+[ERROR][EXP][Cannot Execute][Tensor val1, _PI]

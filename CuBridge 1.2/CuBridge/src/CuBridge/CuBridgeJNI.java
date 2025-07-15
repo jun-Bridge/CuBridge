@@ -3,6 +3,7 @@ package CuBridge;
 import java.io.*;
 
 class CuBridgeJNI {
+	
 	private static String loadDll(String fileName) throws IOException {
 	    File dir = new File(System.getProperty("java.io.tmpdir"), "cubridge_dll_tmp");
 	    if (!dir.exists()) dir.mkdirs();
@@ -38,6 +39,8 @@ class CuBridgeJNI {
 		
 	}
 	
+	
+	
 	static native void init(String path);
 	static native void refresh();
 	static native void setAuto();
@@ -50,9 +53,9 @@ class CuBridgeJNI {
 	static native void bufferClean();
 
 	static native String visualQueueAll();
-	static native String visualQueue(String name);
+	static native String visualQueue();
 	static native String visualBufferAll();
-	static native String visualBuffer(String name);
+	static native String visualBuffer();
 
 	static native boolean put(double[] data, int[] shape, int dataLen, int shapeLen, int usageNum, String name, boolean isBroad);
 	static native boolean pop(String name);
