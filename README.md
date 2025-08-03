@@ -69,7 +69,7 @@ CuBridge cb = CuBridge.getInstance();
 Tensor t1 = Tensor.randn(3, 1);
 Tensor t2 = Tensor.randn(1, 3);
 
-Tensor t3 = cb.dot(t1, t2);
+Tensor t3 = cb.dotI(t1, t2);
 
 t3.printData();
 
