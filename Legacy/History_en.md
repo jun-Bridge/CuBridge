@@ -87,7 +87,7 @@
 
 - Bug Fixes and Feature Improvements
 
-### 1. Constant Tensor System Introduced
+1. Constant Tensor System Introduced
 
 **Key Features**
 - A tensor is recognized as a **constant** if its name starts with `'_'` and `usageCount < 0`.
@@ -122,9 +122,8 @@
 | `_HUNDRED`   | 100.0            | Percentage calculations   |
 | `_MAXPIXEL`  | 255.0            | Image normalization       |
 
----
 
-### 2. Visual Series Enhancements
+2. Visual Series Enhancements
 
 - `visualQueue()` displays only variable tensors.
 - `visualQueueAll()` displays all tensors including constants.
@@ -132,9 +131,8 @@
   - Example: `Queue Size : 20 (Const : 18, Var : 2)`
 - Buffer visual output remains unchanged.
 
----
 
-### 3. Standardized Error Message Format
+3. Standardized Error Message Format
 
 - All operation functions now follow a unified error format.
 - Error messages now include input and output tensor names for clearer diagnostics.
@@ -142,3 +140,24 @@
 **Example:**
 ```text
 [ERROR][EXP][Cannot Execute][Tensor val1, _PI]
+
+---
+
+## Version 1.3
+
+- Added direct tensor input/output functionality
+
+- Added direct tensor input functions  
+  - You no longer need to explicitly use the put() function; you can now pass Tensor objects directly as parameters to operators.  
+    - ex) cb.add(Tensor a, Tensor b), cb.add(Tensor a, String b)...  
+    - In the second case, it is possible to perform operations by specifying a constant or a previously stored tensor using a string.
+
+- Added direct tensor output functions  
+  - You no longer need to explicitly use the get() function; operators now directly return Tensor objects.  
+  - All direct output functions are named with an 'I' appended to the operator name, except for transpose(T), im2col, and col2im (unchanged).  
+    - ex) Tensor c = cb.addI(String a, String b)...
+
+- Added direct tensor input/output functions  
+  - Both of the above features can now be used simultaneously.  
+  - GPU-accelerated operations can now be performed using only operators, without put() and get().  
+    - ex) Tensor c = cb.addI(Tensor a, Tensor b)

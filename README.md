@@ -38,7 +38,7 @@
 
 ---
 
-##  예제 코드
+##  예제 코드 1 (정석 작성)
 
 ```java
 CuBridge cb = CuBridge.getInstance();
@@ -59,6 +59,23 @@ Tensor(shape=[3, 3]):
     [  3.000,  6.000,  9.000 ]
     [  4.000,  8.000, 12.000 ]
 ```
+
+
+## 예제 코드 2 (축약 작성)
+
+```java
+CuBridge cb = CuBridge.getInstance();
+
+Tensor t1 = Tensor.randn(3, 1);
+Tensor t2 = Tensor.randn(1, 3);
+
+Tensor t3 = cb.dot(t1, t2);
+
+t3.printData();
+
+```
+
+
 
 
 ##  라이선스

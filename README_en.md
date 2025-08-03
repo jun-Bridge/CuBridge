@@ -39,7 +39,7 @@ All operations are executed based on Tensor objects, and the system automaticall
 
 ---
 
-##  Example Code
+##  Example Code 1
 
 ```java
 CuBridge cb = CuBridge.getInstance();
@@ -60,6 +60,22 @@ Tensor(shape=[3, 3]):
     [  3.000,  6.000,  9.000 ]
     [  4.000,  8.000, 12.000 ]
 ```
+
+
+## Example Code 2
+
+```java
+CuBridge cb = CuBridge.getInstance();
+
+Tensor t1 = Tensor.randn(3, 1);
+Tensor t2 = Tensor.randn(1, 3);
+
+Tensor t3 = cb.dot(t1, t2);
+
+t3.printData();
+
+```
+
 
 ---
 

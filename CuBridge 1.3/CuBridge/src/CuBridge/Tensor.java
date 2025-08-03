@@ -54,7 +54,6 @@ import java.io.*;
  * @author 배준호, 조선대 3학년
  * @since 1.0
  */
-import java.security.PublicKey;
 
 public class Tensor {
 	private double[] data = null;

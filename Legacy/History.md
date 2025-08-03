@@ -133,3 +133,25 @@
 
 예시:
   [ERROR][EXP][Cannot Execute][Tensor val1, _PI]
+
+---
+
+## Version 1.3
+
+- 텐서 즉응 입출력 기능 추가
+
+- 텐서 즉시입력 함수 추가
+  - 이제 put() 함수를 따로 기술할 필요 없이, 연산자에 직접 Tensor 객체를 매개변수로 넣을 수 있습니다.
+    - ex) cb.add(Tensor a, Tensor b), cb.add(Tensor a, String b)...
+    - 두번째 경우, 텐서와 상수 혹은 미리 넣어 둔 텐서를 문자열로 지정하여 연산하는 것이 가능합니다.
+
+- 텐서 즉시출력 함수 추가
+  - 이제 get() 함수를 따로 기술할 필요 없이, 연산자에서 직접 Tensor 객체를 반환받을 수 있습니다.
+  - 모든 즉시출력 함수는 연산자의 이름 뒤에 I를 붙인 형태이며, transpose(T)와 im2col, col2im(그대로)은 예외입니다.
+    - ex) Tensor c = cb.addI(String a, String b)...
+
+- 텐서 즉시 입출력 함수 추가
+  - 앞선 두 기능을 동시에 사용할 수 있습니다.
+  - put()과 get() 없이, 오직 연산자 만으로 GPU 가속 연산이 가능합니다.
+    - ex) Tensor c = cb.addI(Tensor a, Tensor b)
+    
