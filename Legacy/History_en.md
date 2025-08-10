@@ -161,3 +161,20 @@
   - Both of the above features can now be used simultaneously.  
   - GPU-accelerated operations can now be performed using only operators, without put() and get().  
     - ex) Tensor c = cb.addI(Tensor a, Tensor b)
+    
+---
+
+## Version 1.3.1
+
+- Bug Fixes & Improvements
+
+1. **Broadcast Bug Fix**
+   - Fixed a bug where, during matmul execution, the broadcasting of the second matrix was dependent on the axis size of the first matrix.
+   - This issue caused matmul to produce completely incorrect outputs, which has now been resolved.
+
+2. **im2col Bug Fix & Enhancement**
+   - Fixed an issue where matrix rearrangement via im2col was not performed correctly.
+   - Additionally, optimized performance by rearranging the kernel size for faster execution.
+
+3. **dot Optimization**
+   - Improved the inner product kernel performance by introducing cuBLAS.
