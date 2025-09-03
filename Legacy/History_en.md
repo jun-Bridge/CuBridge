@@ -178,3 +178,31 @@
 
 3. **dot Optimization**
    - Improved the inner product kernel performance by introducing cuBLAS.
+
+---
+
+## Version 1.4
+
+- **Inner-Product and Operation Optimizations**
+
+1. **cublas Strided Dot (Batched Inner Product)**
+   - Applies **stride-based batched inner products** to the Dot path so that identical operations across multiple batches are processed at once.
+   - Reduces kernel launch overhead and improves memory access patterns, increasing **throughput for inner-product operations**.
+   - Keeps a clear separation from the Matmul path, providing a fast path optimized for **vector and 2D inner products**.
+
+2. **Simplified Transpose Flag — Limited to Dot/Matmul**
+   - When calling `reshape()`, specifying the **first axis as negative** marks the tensor as **transposed**.
+   - Example: `{ -M, N }` is treated as the transpose of `{ N, M }`.
+   - This rule **applies only to dot/matmul paths** and is **not available** for other operations.
+
+3. **VRAM Caching Policy and Internal Behavior Optimization**
+   - In **GPU mode**, tensors produced by operations **remain in VRAM by default**.
+   - Minimizes **Host↔Device copies** in subsequent ops, improving performance in chained executions.
+   - Refined internal `flush/check` procedures to reduce unnecessary transfers and ensure **stable VRAM usage**.
+
+4. **Shortened Internal Paths for Inner Product / General Ops**
+   - Streamlined the `gatedMemory → execute → push` flow and reinforced **intermediate buffer reuse** to reduce **copies and allocations**.
+   - Strengthened **pre-validation** for broadcast/axis operations/transpose flags to lower runtime branching overhead.
+   - Removed the **operation-variable recovery step**, further improving **speed and memory efficiency**.
+
+> **Compatibility**: No changes to the public API. The transpose-flag feature is optional and only active when a negative first axis is used.

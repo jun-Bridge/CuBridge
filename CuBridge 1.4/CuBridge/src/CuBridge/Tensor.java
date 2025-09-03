@@ -9,7 +9,7 @@ import java.io.*;
  * <b>CuBridge</b> (numerical computation), <b>DataBridge</b> (data preprocessing),
  * <b>JANET</b> (neural network operations), and <b>ExBridge</b> (visualization).
  *
- * <p>Internally, a tensor is a dense, flat double array accompanied by shape metadata,
+ * <p>Internally, a tensor is a dense, flat float array accompanied by shape metadata,
  * capable of representing scalars, vectors, matrices, or N-dimensional arrays. It is designed
  * to be memory-efficient, extensible, and highly interoperable across modules.
  *
@@ -56,7 +56,7 @@ import java.io.*;
  */
 
 public class Tensor {
-	private double[] data = null;
+	private float[] data = null;
 	private int[] shape = null;
 	private int len = 0;
 
@@ -67,7 +67,6 @@ public class Tensor {
 	/**
 	 * Calculates the total number of elements implied by the given shape.
 	 *
-	 * @param shape the array of shape dimensions
 	 * @return the total number of elements (product of dimensions)
 	 */
 	private int getLenFromShape() {
@@ -84,7 +83,7 @@ public class Tensor {
 	}
 
 	/**
-	 * Constructs a 1-dimensional Tensor from a given array of doubles.
+	 * Constructs a 1-dimensional Tensor from a given array of floats.
 	 * <ul>
 	 * <li>The tensor will have shape (N), where N is the length of the input
 	 * array.</li>
@@ -93,7 +92,7 @@ public class Tensor {
 	 * 
 	 * @param data one-dimensional data values
 	 */
-	public Tensor(double... data) {
+	public Tensor(float... data) {
 		this.shape = new int[] { data.length };
 		this.data = data.clone();
 		this.len = data.length;
@@ -112,7 +111,7 @@ public class Tensor {
 	 * @param data  the flat data array
 	 * @param shape the intended shape dimensions
 	 */
-	public Tensor(double[] data, int... shape) {
+	public Tensor(float[] data, int... shape) {
 		this.shape = shape.clone();
 		this.data = data.clone();
 		this.len = data.length;
@@ -136,7 +135,7 @@ public class Tensor {
 	 * @param path file path to the CSV file
 	 */
 	public Tensor(String path) {// TODO : 만약 다축 텐서의 경우 어떻게 저장하는가? // 야 이 csv가 다축일리가 있겠냐?
-		ArrayList<Double> tmpList = new ArrayList<Double>();
+		ArrayList<Float> tmpList = new ArrayList<Float>();
 		Scanner sc = null;
 		int col = 0;
 		int row = 0;
@@ -160,9 +159,9 @@ public class Tensor {
 
 				for (int r = 0; r < row; r++)
 					if (tmp[r].equals(""))
-						tmpList.add(0.0);
+						tmpList.add(0.0f);
 					else
-						tmpList.add(Double.parseDouble(tmp[r]));
+						tmpList.add(Float.parseFloat(tmp[r]));
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -171,7 +170,7 @@ public class Tensor {
 		}
 
 		this.len = tmpList.size();
-		this.data = new double[this.len];
+		this.data = new float[this.len];
 		this.shape = new int[] { col, row };
 
 		for (int idx = 0; idx < this.len; idx++)
@@ -183,13 +182,13 @@ public class Tensor {
 	 * Constructs a Tensor by converting a 2D string array to a numerical tensor.
 	 *
 	 * <p>
-	 * Full parameter: {@code Tensor(String[][] data, double norm)}<br>
+	 * Full parameter: {@code Tensor(String[][] data, float norm)}<br>
 	 * This version:
 	 * <ul>
 	 *   <li>Uses a default normalization factor of 1 (no scaling).</li>
-	 *   <li>All string values are parsed into double precision values.</li>
+	 *   <li>All string values are parsed into float precision values.</li>
 	 *   <li>The input must be rectangular (all rows equal length).</li>
-	 *   <li>Stored in column-major order: {@code data[c][r]} becomes {@code double[col * row + r]}.</li>
+	 *   <li>Stored in column-major order: {@code data[c][r]} becomes {@code float[col * row + r]}.</li>
 	 * </ul>
 	 * </p>
 	 *
@@ -204,13 +203,13 @@ public class Tensor {
 	 * Constructs a Tensor by converting a 2D string array to a normalized numerical tensor.
 	 *
 	 * <p>
-	 * Full parameter: {@code Tensor(String[][] data, double norm)}<br>
+	 * Full parameter: {@code Tensor(String[][] data, float norm)}<br>
 	 * This version:
 	 * <ul>
-	 *   <li>All string elements are parsed into doubles and divided by {@code norm}.</li>
+	 *   <li>All string elements are parsed into floats and divided by {@code norm}.</li>
 	 *   <li>Use this to scale raw string data (e.g., percentage normalization).</li>
 	 *   <li>The input must be a regular 2D array (same row lengths).</li>
-	 *   <li>Stored in column-major order: {@code data[c][r]} becomes {@code double[col * row + r]}.</li>
+	 *   <li>Stored in column-major order: {@code data[c][r]} becomes {@code float[col * row + r]}.</li>
 	 * </ul>
 	 * </p>
 	 *
@@ -218,14 +217,14 @@ public class Tensor {
 	 * @param norm the normalization factor to divide each value by
 	 * @since v1.1
 	 */
-	public Tensor(String[][] data, double norm) {
+	public Tensor(String[][] data, float norm) {
 		int col = data.length;
 		int row = data[0].length;
-		this.data = new double[col * row];
+		this.data = new float[col * row];
 
 		for (int c = 0; c < col; c++)
 			for (int r = 0; r < row; r++)
-				this.data[col * row + r] = Double.parseDouble(data[c][r]) / norm;
+				this.data[col * row + r] = Float.parseFloat(data[c][r]) / norm;
 	}
 
 	/**
@@ -233,7 +232,7 @@ public class Tensor {
 	 *
 	 * @return cloned array containing tensor values
 	 */
-	public double[] toArray() {
+	public float[] toArray() {
 		return this.data.clone();
 	}
 
@@ -387,11 +386,11 @@ public class Tensor {
 	 * @param shape the desired tensor shape
 	 * @return a new tensor filled with {@code value}
 	 */
-	public static Tensor filled(double value, int... shape) {
+	public static Tensor filled(float value, int... shape) {
 		Tensor t = new Tensor();
 		t.shape = shape.clone();
 		t.len = getLenFromShape(shape);
-		t.data = new double[t.len];
+		t.data = new float[t.len];
 
 		for (int i = 0; i < t.len; i++)
 			t.data[i] = value;
@@ -409,10 +408,10 @@ public class Tensor {
 		Tensor t = new Tensor();
 		t.shape = shape.clone();
 		t.len = getLenFromShape(shape);
-		t.data = new double[t.len];
+		t.data = new float[t.len];
 
 		for (int i = 0; i < t.len; i++)
-			t.data[i] = Math.random();
+			t.data[i] = (float) Math.random();
 
 		return t;
 	}
@@ -429,10 +428,10 @@ public class Tensor {
 		Tensor t = new Tensor();
 		t.shape = shape.clone();
 		t.len = getLenFromShape(shape);
-		t.data = new double[t.len];
+		t.data = new float[t.len];
 
 		for (int i = 0; i < t.len; i++)
-			t.data[i] = random.nextGaussian();
+			t.data[i] = (float) random.nextGaussian();
 
 		return t;
 	}
@@ -446,15 +445,15 @@ public class Tensor {
 	 * @param shape the desired tensor shape
 	 * @return a new tensor with normally distributed values
 	 */
-	public static Tensor randn(double mean, double std, int... shape) {
+	public static Tensor randn(float mean, float std, int... shape) {
 		Random random = new Random();
 		Tensor t = new Tensor();
 		t.shape = shape.clone();
 		t.len = getLenFromShape(shape);
-		t.data = new double[t.len];
+		t.data = new float[t.len];
 
 		for (int i = 0; i < t.len; i++)
-			t.data[i] = std * random.nextGaussian() + mean;
+			t.data[i] = (float)(std * random.nextGaussian() + mean);
 
 		return t;
 	}
@@ -466,7 +465,7 @@ public class Tensor {
 	 * @return a new tensor filled with 0.0
 	 */
 	public static Tensor zeros(int... shape) {
-		return filled(0.0, shape);
+		return filled(0.0f, shape);
 	}
 
 	/**
@@ -476,7 +475,7 @@ public class Tensor {
 	 * @return a new tensor filled with 1.0
 	 */
 	public static Tensor ones(int... shape) {
-		return filled(1.0, shape);
+		return filled(1.0f, shape);
 	}
 
 	/**
@@ -489,10 +488,10 @@ public class Tensor {
 		Tensor t = new Tensor();
 		t.shape = new int[] { n, n };
 		t.len = n * n;
-		t.data = new double[t.len];
+		t.data = new float[t.len];
 
 		for (int i = 0; i < n; i++)
-			t.data[i * n + i] = 1.0;
+			t.data[i * n + i] = 1.0f;
 
 		return t;
 	}
@@ -506,7 +505,7 @@ public class Tensor {
 	 * @param step  the increment step (must be > 0)
 	 * @return a 1D tensor with range values
 	 */
-	public static Tensor arange(double start, double end, double step) {
+	public static Tensor arange(float start, float end, float step) {
 		if (start >= end) {
 			System.out.printf("Error: Tensor.arange() - start (%.3f) must be less than end (%.3f)\n", start, end);
 			return new Tensor();
@@ -520,7 +519,7 @@ public class Tensor {
 		Tensor t = new Tensor();
 		t.shape = new int[] { length };
 		t.len = length;
-		t.data = new double[length];
+		t.data = new float[length];
 
 		for (int i = 0; i < length; i++)
 			t.data[i] = start + i * step;
@@ -537,7 +536,7 @@ public class Tensor {
 	 * @param num   number of values to generate (must be ≥ 1)
 	 * @return a 1D tensor with evenly spaced values
 	 */
-	public static Tensor linspace(double start, double end, int num) {
+	public static Tensor linspace(float start, float end, int num) {
 		Tensor t = new Tensor();
 
 		if (num <= 0) {
@@ -547,14 +546,14 @@ public class Tensor {
 
 		t.shape = new int[] { num };
 		t.len = num;
-		t.data = new double[num];
+		t.data = new float[num];
 
 		if (num == 1) {
 			t.data[0] = start;
 			return t;
 		}
 
-		double step = (end - start) / (num - 1);
+		float step = (end - start) / (num - 1);
 
 		for (int i = 0; i < num; i++)
 			t.data[i] = start + i * step;

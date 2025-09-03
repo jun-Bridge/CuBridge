@@ -57,10 +57,10 @@ class CuBridgeJNI {
 	static native String visualBufferAll();
 	static native String visualBuffer();
 
-	static native boolean put(double[] data, int[] shape, int dataLen, int shapeLen, int usageNum, String name, boolean isBroad);
+	static native boolean put(float[] data, int[] shape, int dataLen, int shapeLen, int usageNum, String name, boolean isBroad);
 	static native boolean pop(String name);
 
-	static native double[] getData(String name);
+	static native float[] getData(String name);
 	static native int[] getShape(String name);
 	static native boolean duple(String name, int usage);
 	static native boolean broad(String name, boolean broad);

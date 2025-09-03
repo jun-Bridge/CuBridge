@@ -10,24 +10,24 @@ public class CuBridge {
 	}
 	
 	private void loadConst() {
-	    put(1.0, "_ONE", -1);
-	    put(2.0, "_TWO", -1);
-	    put(3.0, "_THREE", -1);
-	    put(4.0, "_FOUR", -1);
-	    put(5.0, "_FIVE", -1);
-	    put(6.0, "_SIX", -1);
-	    put(7.0, "_SEVEN", -1);
-	    put(8.0, "_EIGHT", -1);
-	    put(9.0, "_NINE", -1);
-	    put(0.0, "_ZERO", -1);
-	    put(0.5, "_HALF", -1);
-	    put(100.0, "_HUNDRED", -1);
-	    put(255.0, "_MAXPIXEL", -1);
-	    put(-1.0, "_NEG", -1);
-	    put(1e-6, "_EPSILON", -1);
-	    put(0.001, "_RATE", -1);
-	    put(3.14159265359, "_PI", -1);
-	    put(2.718281, "_E", -1);
+	    put(1.0f, "_ONE", -1);
+	    put(2.0f, "_TWO", -1);
+	    put(3.0f, "_THREE", -1);
+	    put(4.0f, "_FOUR", -1);
+	    put(5.0f, "_FIVE", -1);
+	    put(6.0f, "_SIX", -1);
+	    put(7.0f, "_SEVEN", -1);
+	    put(8.0f, "_EIGHT", -1);
+	    put(9.0f, "_NINE", -1);
+	    put(0.0f, "_ZERO", -1);
+	    put(0.5f, "_HALF", -1);
+	    put(100.0f, "_HUNDRED", -1);
+	    put(255.0f, "_MAXPIXEL", -1);
+	    put(-1.0f, "_NEG", -1);
+	    put(1e-6f, "_EPSILON", -1);
+	    put(0.001f, "_RATE", -1);
+	    put(3.14159265359f, "_PI", -1);
+	    put(2.718281f, "_E", -1);
 	}
 
 	private String genRandomName() {
@@ -216,9 +216,9 @@ public class CuBridge {
 	}
 
 	/**
-	 * Stores a double scalar tensor.
+	 * Stores a float scalar tensor.
 	 * <p>
-	 * Full parameter: {@code put(double data, String name, int usageCount, boolean broadcast)}<br>
+	 * Full parameter: {@code put(float data, String name, int usageCount, boolean broadcast)}<br>
 	 * This version:
 	 * <ul>
 	 * <li>broadcast = true (automatically marked as broadcastable)</li>
@@ -227,17 +227,17 @@ public class CuBridge {
 	 * </ul>
 	 * </p>
 	 *
-	 * @param data the double value to store
+	 * @param data the float value to store
 	 * @return CuBridge instance for chaining
 	 */
-	public CuBridge put(double data) {
+	public CuBridge put(float data) {
 		return put(new Tensor(data), true);
 	}
 
 	/**
-	 * Stores a double scalar tensor.
+	 * Stores a float scalar tensor.
 	 * <p>
-	 * Full parameter: {@code put(double data, String name, int usageCount, boolean broadcast)}<br>
+	 * Full parameter: {@code put(float data, String name, int usageCount, boolean broadcast)}<br>
 	 * This version:
 	 * <ul>
 	 * <li>broadcast = true (automatically marked as broadcastable)</li>
@@ -245,18 +245,18 @@ public class CuBridge {
 	 * </ul>
 	 * </p>
 	 *
-	 * @param data the double value to store
+	 * @param data the float value to store
 	 * @param name the tensor name (must be unique and non-empty)
 	 * @return CuBridge instance for chaining
 	 */
-	public CuBridge put(double data, String name) {
+	public CuBridge put(float data, String name) {
 		return put(new Tensor(data), name, 1, true);
 	}
 
 	/**
-	 * Stores a double scalar tensor.
+	 * Stores a float scalar tensor.
 	 * <p>
-	 * Full parameter: {@code put(double data, String name, int usageCount, boolean broadcast)}<br>
+	 * Full parameter: {@code put(float data, String name, int usageCount, boolean broadcast)}<br>
 	 * This version:
 	 * <ul>
 	 * <li>broadcast = true (automatically marked as broadcastable)</li>
@@ -269,12 +269,12 @@ public class CuBridge {
 	 * </ul>
 	 * </p>
 	 *
-	 * @param data        the double value to store
+	 * @param data        the float value to store
 	 * @param name        the tensor name (must be unique and non-empty)
 	 * @param usageCount  number of times this tensor will be used (>0 or -1 for constants)
 	 * @return CuBridge instance for chaining
 	 */
-	public CuBridge put(double data, String name, int usageCount) {
+	public CuBridge put(float data, String name, int usageCount) {
 		return put(new Tensor(data), name, usageCount, true);
 	}
 
@@ -468,7 +468,7 @@ public class CuBridge {
 	}
 
 	private Tensor getTensor(String name) {
-		double[] data = CuBridgeJNI.getData(name);
+		float[] data = CuBridgeJNI.getData(name);
 		int[] shape = CuBridgeJNI.getShape(name);
 		CuBridgeJNI.bufferClean();
 
