@@ -542,6 +542,22 @@ public interface AlgebraOps {
     }
 
     /**
+     * **Transpose — Overload using tensor names**
+     *
+     * Performs a transpose operation on the tensor specified by {@code name},
+     * swapping the last two axes by default (i.e., axes {@code 0} and {@code -1}).
+     * This is equivalent to calling {@link #transpose(String, String, int, int)} with axes (0, -1).
+     *
+     * @param name The name of the input tensor to transpose.
+     * @param out  The name under which to store the resulting transposed tensor.
+     * @return A {@link CuBridge} instance after performing the transpose operation.
+     * @see #transpose(String, String, int, int)
+     */
+    default CuBridge transpose(String name, String out) {
+        return transpose(name, out, 0, -1);
+    }
+
+    /**
      * **Transpose — Overload using a Tensor object and output name**
      *
      * Performs a transpose operation on the given {@link Tensor} object
@@ -555,24 +571,6 @@ public interface AlgebraOps {
     default CuBridge transpose(Tensor a, String out) {
         String aName = genRandomNameAlgebra(); CuBridge.getInstance().put(a, aName);
         return transpose(aName, out, 0, -1);
-    }
-
-    /**
-     * **Transpose — Overload using a Tensor object with specified axes**
-     *
-     * Performs a transpose operation on the given {@link Tensor} object,
-     * swapping the specified axes.
-     *
-     * @param a     The input tensor to transpose.
-     * @param out   The name to store the resulting tensor.
-     * @param axis1 The first axis to swap.
-     * @param axis2 The second axis to swap.
-     * @return A {@link CuBridge} instance representing the transpose operation.
-     * @see #transpose(String, String, int, int)
-     */
-    default CuBridge transpose(Tensor a, String out, int axis1, int axis2) {
-        String aName = genRandomNameAlgebra(); CuBridge.getInstance().put(a, aName);
-        return transpose(aName, out, axis1, axis2);
     }
 
     /**
@@ -594,6 +592,24 @@ public interface AlgebraOps {
         if (CuBridgeJNI.transpose(name, out, axis1, axis2)) return CuBridge.getInstance();
         else System.err.println("Error | transpose | " + name + " | " + out + " | " + axis1 + " | " + axis2);
         return null;
+    }
+
+    /**
+     * **Transpose — Overload using a Tensor object with specified axes**
+     *
+     * Performs a transpose operation on the given {@link Tensor} object,
+     * swapping the specified axes.
+     *
+     * @param a     The input tensor to transpose.
+     * @param out   The name to store the resulting tensor.
+     * @param axis1 The first axis to swap.
+     * @param axis2 The second axis to swap.
+     * @return A {@link CuBridge} instance representing the transpose operation.
+     * @see #transpose(String, String, int, int)
+     */
+    default CuBridge transpose(Tensor a, String out, int axis1, int axis2) {
+        String aName = genRandomNameAlgebra(); CuBridge.getInstance().put(a, aName);
+        return transpose(aName, out, axis1, axis2);
     }
 
     /**
