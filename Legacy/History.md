@@ -185,7 +185,7 @@
 
 2. **전치(Transpose) 플래그 간편화 — 내적 두 경로(dot, matmul) 한정**
    - `reshape()` 시 **첫 축을 음수**로 지정하면 해당 텐서를 **전치로 인식**합니다.
-   - 예) `{ -M, N }`는 기존 `{ N, M }` 전치로 처리됩니다.
+   - 예) `{ -M, N }`는 연산 시 `{ N, M }` 전치로 처리됩니다.
    - 이 규칙은 **dot/matmul 경로에만 적용**되며, 그 외 연산에는 활용이 불가능합니다.
 
 3. **VRAM 캐싱 정책 도입 및 내부 동작 최적화**
@@ -199,3 +199,53 @@
    - **연산 변수 회복 단계 삭제**로 **속도 및 메모리 사용 효율**을 추가로 높였습니다.
 
 > **호환성**: 기존 API 변경 없이 동작하며, 전치 플래그 기능은 선택적(음수 축 사용 시)으로만 적용됩니다.
+
+---
+
+## Version 1.5 || 20251112
+
+- **함수 오버로딩 정리 및 연산 대량 추가**
+
+1. **Tensor 클래스 개량**
+    - slice, v/h/stack, Tensor(wav/csv), Tensor(float[][]) 함수 추가.
+    - wav 파일 로드 시 "wav_16000_32" 형식으로 지정하여 포맷 일관화 기능 추가
+    - 함수 독스 개선
+
+2. **함수 대량 추가**
+    - Unary : abs, neg, square, sqrt, rsqrt, log, log2, ln, exp, reciprocal, 
+              sin, cos, tan, sinh, cosh, tanh, asin, acos, atan, asinh, acosh, atanh, 
+              step, sigmoid, relu, leakRelu, softplus, 
+              round, ceil, floor, not, deg2rad, rad2deg
+
+    - Binary : add, sub, mul, div, pow, mod, gt, lt, ge, le, eq, ne, and, or
+
+    - Axis Cascade : sum, mean, var, std, max, min
+
+    - Axis : accumulate, compress, expand, axisMax, axisMin, axisVar, axisStd, argMax, argMin
+
+3. **연산군 정리 및 추가**
+    - Algebra : l2normalize, dot, matmul, transpose, 
+                trace, inverse, eigen, svd, det, qr, cholesky, rank, 
+                normalize, standardize, affine, softmax
+
+    - Audio : low/mid/high/All/preEmphasis, 
+              applyWindow, applyFilter,
+              fft, rfft, ifft, powfft, magfft, phasefft,
+              low/mid/high/All/boost, 
+              spectrogram, dct, mfcc,
+              makeMelFilter, makeBarkFilter, makeErbFilter, makeChromaFilter,
+              makeGaussianWindow, makeRectWindow, makeHannWindow, makeHammingWindow, makeBartlettWindow, makeKaiserWindow
+
+    - Image : rotate, shift, translate, resize, crop, mask, pad, 
+              boxBlur, gaussianBlur, medianBlur, 
+              flipH, flipV, grayScale, chSplit, chMerge, 
+              im2col1D, col2im1D, im2col2D, col2im2D
+
+    - Scalar : L1Norm, L2Norm, LinfNorm,
+              L1Dist, L2Dist, LinfDist, cosDist, cosSim,
+              mse, bce, cee, mae, rmse, mape,
+              focal, perplexity, dice, iou
+
+    - Utility : clip, softClip, sigClip, tanhClip, logClip
+
+4. **버그 수정 및 최적화**

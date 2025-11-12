@@ -28,13 +28,27 @@
 
 ---
 
-##  설치 방법 (Eclipse 기준)
+## 설치 방법
 
-### `CuBridge.jar` 프로젝트에 추가
+### Eclipse 환경에서 `CuBridge.jar` 추가
 
-1. Eclipse에서 `Project → Properties → Java Build Path` 열기
-2. `Libraries` 탭으로 이동 → classpath 클릭 후 **[Add External JARs...]** 클릭
-3. 다운로드에서 프로젝트 폴더로 옮긴 `CuBridge.jar` 선택 → 적용
+1. Eclipse에서 상단 메뉴 **`Project → Properties → Java Build Path`** 열기  
+2. **`Libraries`** 탭으로 이동 → **Classpath** 선택 후 **[Add External JARs...]** 클릭  
+3. 다운로드한 `CuBridge.jar` 파일을 프로젝트 폴더로 복사한 뒤 선택  
+4. **Apply → Close** 클릭 후 프로젝트 리빌드
+
+---
+
+### IntelliJ IDEA 환경에서 `CuBridge.jar` 추가
+
+1. IntelliJ에서 상단 메뉴 **`File → Project Structure (Ctrl+Alt+Shift+S)`** 열기  
+2. 왼쪽 메뉴에서 **`Modules`** 선택 → 우측 상단의 **`Dependencies`** 탭 클릭  
+3. **`+ (Add)` → JARs or Directories...** 선택  
+4. 다운로드한 `CuBridge.jar` 파일을 선택 후 **OK**  
+5. 적용 순서:  
+   - `Scope`는 **Compile** 로 설정  
+   - **Apply → OK** 클릭  
+6. 프로젝트를 **Rebuild (Ctrl+F9)** 하여 반영 확인  
 
 ---
 
@@ -69,10 +83,10 @@ CuBridge cb = CuBridge.getInstance();
 Tensor t1 = Tensor.randn(3, 1);
 Tensor t2 = Tensor.randn(1, 3);
 
-Tensor t3 = cb.dot(t1, t2);
+cb.dotI(t1, t2).printData();
 
-t3.printData();
-
+//put 없이 연산자에 바로 텐서 입력 가능
+//연산자 뒤에 I를 붙이면 바로 Tensor 반환
 ```
 
 

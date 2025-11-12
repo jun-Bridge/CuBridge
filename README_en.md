@@ -39,6 +39,21 @@ All operations are executed based on Tensor objects, and the system automaticall
 
 ---
 
+### Add `CuBridge.jar` in IntelliJ IDEA
+
+1. In IntelliJ, open **`File → Project Structure (Ctrl+Alt+Shift+S)`**  
+2. In the left menu, select **`Modules`**, then click the **`Dependencies`** tab on the right  
+3. Click **`+ (Add)` → JARs or Directories...**  
+4. Select the downloaded `CuBridge.jar` file and click **OK**  
+5. Apply settings:  
+   - Set **Scope** to **Compile**  
+   - Click **Apply → OK**  
+6. Rebuild the project (**Ctrl+F9**) to apply the changes  
+
+---
+
+---
+
 ##  Example Code 1
 
 ```java
@@ -53,7 +68,7 @@ cb.affine("x", "w", "b").get().printData();
 // You can omit tensor names for simpler operations
 ```
 
-Output:
+## Output:
 ```
 Tensor(shape=[3, 3]):
     [  2.000,  4.000,  6.000 ]
@@ -70,10 +85,9 @@ CuBridge cb = CuBridge.getInstance();
 Tensor t1 = Tensor.randn(3, 1);
 Tensor t2 = Tensor.randn(1, 3);
 
-Tensor t3 = cb.dot(t1, t2);
-
-t3.printData();
-
+cb.dotI(t1, t2).printData();
+// You can input tensors directly into the operator without using put()
+// Adding 'I' to the operator name immediately returns a Tensor
 ```
 
 

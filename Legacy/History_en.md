@@ -1,208 +1,277 @@
-# CuBridge Changelog
-
-## BETA
-
-- Verified integration between Java and C++/CUDA C  
-- Established a triple memory structure: queue / map / buffer  
-- Implemented put / cal / get operation flow  
-- Designed dual memory system: cpu_ram / gpu_vram  
-- Automatic environment detection  
-- Functions added:
-  - auto, cal, ram, env, sysinfo, clear
-  - visual queue/map, put, get
-- Operations added:
-  - **Unary operations**:  
-    abs, neg, square, sqrt, log, log_2, ln, reciprocal, sin, cos, tan, step, sigmoid, tanh, relu, leakRelu, softplus, exp, round, ceil, floor, not
-  - **Binary operations**:  
-    add, sub, mul, div, pow, mod, gt, lt, ge, le, eq, ne, and, or
-  - **Axis-based operations**:  
-    sum, mean, var, std, max, min
-  - **Matrix operations**:  
-    transpose, dot
-  - **Neural network operations**:  
-    affine, cee, mse, softmax
+# **CuBridge Change Log**
 
 ---
 
-## Version 1.0
+## **BETA**
 
-- BETA stabilization:
-  - Memory leak fixes
-  - Structural optimization
-  - Removed `map` and finalized queue/buffer dual structure
-  - Removed VRAM policy for improved speed and stability
-- Dependency resolution:
-  - Separated and stabilized CUDA system
-- Deployment optimization:
-  - Now runs with a single JAR file
-- Functions added:
-  - duple, broad, visualBuffer / All
-- Operation enhancements:
-  - Split axis operations into **aggregated** and **independent**
-    - Aggregated: sum, mean, var, std, max, min
-    - Independent: accumulate, compress, expand, argmax, argmin, axisMax, axisMin
-    - Aggregated ops combine all axes up to the specified one
-    - Independent ops apply only to the specified axis
-  - Transpose optimization:
-    - Improved performance and multi-axis support
-  - Dot product dualization:
-    - dot/matmul separated, internally bypassed depending on shape
-  - Axis argument added to softmax
+- Verified integration between **Java ↔ C++/CUDA C**
+- Established a **triple-memory architecture**: queue / map / buffer
+- Built the **put / cal / get** execution system
+- Implemented a **dual memory layer**: cpu_ram / gpu_vram
+- Added **automatic environment recognition**
 
----
+### Function Additions
+- `auto`, `cal`, `ram`, `env`, `sysinfo`, `clear`
+- `visualQueue`, `visualMap`, `put`, `get`
 
-## Version 1.1
-
-- Bug Fixes
-  - Fixed an issue in `transpose` where automatic axis inference using -1 caused reversed axis order.
-
-- New Operations
-  - `rad2deg`, `deg2rad`: Support for angle-to-radian and radian-to-angle conversion.
-  - `im2col1D`, `col2im1D`: Input/output restructuring functions for 1D convolution.
-  - `im2col2D`, `col2im2D`: Input/output restructuring functions for 2D convolution.
-  - `reshape`: Dynamically updates the shape and size (`sLen`) of a tensor within the queue.
-
-- Tensor Class Extension
-  - Added string-based tensor constructors: `Tensor(String[][])` and `Tensor(String[][], float)` for initialization from string arrays.
+### Operation Additions
+- **Unary operations:**  
+  `abs, neg, square, sqrt, log, log_2, ln, reciprocal, sin, cos, tan, step, sigmoid, tanh, relu, leakRelu, softplus, exp, round, ceil, floor, not`
+- **Binary operations:**  
+  `add, sub, mul, div, pow, mod, gt, lt, ge, le, eq, ne, and, or`
+- **Axis operations:**  
+  `sum, mean, var, std, max, min`
+- **Matrix operations:**  
+  `transpose, dot`
+- **Neural network operations:**  
+  `affine, cee, mse, softmax`
 
 ---
 
-## Version 1.1.1
+## **Version 1.0**
 
-- Bug Fixes
+### Beta stabilization
+- Fixed memory leaks  
+- Optimized internal structure  
+- Removed map → established dual structure: queue/buffer  
+- Removed VRAM policy for better speed and stability  
+
+### Dependency resolution
+- Isolated and stabilized CUDA system  
+
+### Deployment optimization
+- Single JAR execution supported  
+
+### Function Additions
+- `duple`, `broad`, `visualBuffer`, `visualAll`
+
+### Operation Improvements
+- Axis operations divided into **axis-integrated** and **axis-independent**
+  - Integrated: `sum, mean, var, std, max, min`
+  - Independent: `accumulate, compress, expand, argmax, argmin, axisMax, axisMin`
+  - Integrated ops reduce along all axes up to the specified one  
+  - Independent ops calculate only along the given axis
+- **Transpose optimization** for speed and multi-axis support
+- **Dot/Matmul separation** – automatic bypass depending on tensor shape
+- Added axis argument to **softmax**
+
+---
+
+## **Version 1.1**
+
+### Bug Fixes
+- Fixed incorrect axis reversal when using `-1` for automatic axis selection in transpose.
+
+### New Operations
+- `rad2deg`, `deg2rad`: Degree–radian conversion
+- `im2col1D`, `col2im1D`: 1D convolution input/output reconstruction
+- `im2col2D`, `col2im2D`: 2D convolution input/output reconstruction
+- `reshape`: Dynamically update tensor shape and length
+
+### Tensor Class Extensions
+- Added string-based tensor constructors  
+  `Tensor(String[][])` and `Tensor(String[][], float)`
+
+---
+
+## **Version 1.1.1**
+
+### Bug Fixes
 
 1. **Fixed queue name mismatch in `pop()`**
-   - Previously, `genRandomName()` was mistakenly called instead of `""`, causing the function to search for tensors with auto-generated names rather than the top of the queue.
-   - This critical bug caused `pop()` to always fail. It is now resolved.
+   - Previously, `genRandomName()` was used instead of `""`, causing the function to search internal tensor names instead of the top queue element.  
+   - This caused `pop()` to always fail — now fixed.
 
-2. **Fixed incorrect broadcast direction**
-   - In binary operations, the broadcasting axis was incorrectly chosen, resulting in reversed broadcasting behavior.
-   - Example: When computing with shapes `{3,2}` and `{1,6}`, expansion was wrongly applied along the columns. It now correctly expands along the rows.
+2. **Fixed broadcast direction error**
+   - In binary operations, broadcast direction was reversed.  
+   - Example: for `{3,2}` and `{1,6}`, expansion incorrectly applied along columns instead of rows.
 
+---
 
---
+## **Version 1.2**
 
+### Bug Fixes & Enhancements
 
-## Version 1.2
-
-- Bug Fixes and Feature Improvements
-
-1. Constant Tensor System Introduced
+#### 1. **Constant Tensor System Added**
 
 **Key Features**
-- A tensor is recognized as a **constant** if its name starts with `'_'` and `usageCount < 0`.
-- Constants are **user-definable** (e.g., `_VAR1`, `_CUSTOM_CONST`, etc.).
-- All constants automatically set `broadcast = true`. User-defined constants can override it.
-- Constants are strictly **immutable**:
-  - Calling `setUsage`, `setBroad`, or `setReshape` will print a warning and ignore the change.
-  - Overwriting constants via `smartPush()` or duplicate `put()` will return an error.
-- Constants **cannot be used as output names** for any operation.
-  - Example: `cb.exp("a", "_PI")` -> Error (cannot overwrite constant `_PI`)
+- Names starting with `'_'` and `usageCount < 0` are automatically recognized as constants.
+- User-defined constants supported (e.g., `_VAR1`, `_CUSTOM_CONST`)
+- All constants are automatically broadcastable (`broadcast = true` by default)
+- Constants are **immutable**:
+  - Calls to `setUsage`, `setBroad`, or `setReshape` are ignored with warnings
+  - `smartPush()` or `put()` using the same name returns an error
+- Constants **cannot** be used as output names:
+  - Example: `cb.exp("a", "_PI")` → error (`_PI` is immutable)
 
-#### Built-in Constants
+#### Built-in Constant List
 
-| Name         | Value           | Notes                    |
-|--------------|------------------|---------------------------|
-| `_ZERO`      | 0.0              | Basic zero constant       |
-| `_ONE`       | 1.0              | Identity operand          |
-| `_TWO`       | 2.0              | Square, exponentiation    |
-| `_THREE`     | 3.0              |                           |
-| `_FOUR`      | 4.0              |                           |
-| `_FIVE`      | 5.0              |                           |
-| `_SIX`       | 6.0              |                           |
-| `_SEVEN`     | 7.0              |                           |
-| `_EIGHT`     | 8.0              |                           |
-| `_NINE`      | 9.0              |                           |
-| `_HALF`      | 0.5              | Averaging, normalization  |
-| `_PI`        | 3.14159265359    | Trigonometric functions   |
-| `_E`         | 2.718281         | Exponential functions     |
-| `_EPSILON`   | 1e-6             | Numerical tolerance       |
-| `_RATE`      | 0.001            | Learning rate, etc.       |
-| `_NEG`       | -1.0             | Negative unit             |
-| `_HUNDRED`   | 100.0            | Percentage calculations   |
-| `_MAXPIXEL`  | 255.0            | Image normalization       |
+| Name         | Value            | Description               |
+|---------------|------------------|----------------------------|
+| `_ZERO`       | 0.0              | Default zero constant      |
+| `_ONE`        | 1.0              | Identity value             |
+| `_TWO`        | 2.0              | Exponentiation, power ops  |
+| `_THREE`      | 3.0              |                            |
+| `_FOUR`       | 4.0              |                            |
+| `_FIVE`       | 5.0              |                            |
+| `_SIX`        | 6.0              |                            |
+| `_SEVEN`      | 7.0              |                            |
+| `_EIGHT`      | 8.0              |                            |
+| `_NINE`       | 9.0              |                            |
+| `_HALF`       | 0.5              | Mean/Normalization         |
+| `_PI`         | 3.14159265359    | For trigonometric ops      |
+| `_E`          | 2.718281         | Euler’s number             |
+| `_EPSILON`    | 1e-6             | Numerical tolerance        |
+| `_RATE`       | 0.001            | Learning rate              |
+| `_NEG`        | -1.0             | Negative constant          |
+| `_HUNDRED`    | 100.0            | Percent, scaling           |
+| `_MAXPIXEL`   | 255.0            | Image normalization        |
 
+#### 2. **Visual Series Improved**
+- `visualQueue()` → shows only normal tensors  
+- `visualQueueAll()` → includes constants  
+- New display format: `"Queue Size : 20 (Const : 18, Var : 2)"`  
+- Buffer display unchanged  
 
-2. Visual Series Enhancements
+#### 3. **Unified Error Message Format**
+- All operation functions now display consistent, detailed error messages  
+- Includes function name, input/output tensors, and failure reason  
 
-- `visualQueue()` displays only variable tensors.
-- `visualQueueAll()` displays all tensors including constants.
-- Display format enhanced:
-  - Example: `Queue Size : 20 (Const : 18, Var : 2)`
-- Buffer visual output remains unchanged.
-
-
-3. Standardized Error Message Format
-
-- All operation functions now follow a unified error format.
-- Error messages now include input and output tensor names for clearer diagnostics.
-
-**Example:**
-```text
-[ERROR][EXP][Cannot Execute][Tensor val1, _PI]
+Example:  
+`[ERROR][EXP][Cannot Execute][Tensor val1, _PI]`
 
 ---
 
-## Version 1.3
+## **Version 1.3**
 
-- Added direct tensor input/output functionality
+### Tensor Immediate I/O System Added
 
-- Added direct tensor input functions  
-  - You no longer need to explicitly use the put() function; you can now pass Tensor objects directly as parameters to operators.  
-    - ex) cb.add(Tensor a, Tensor b), cb.add(Tensor a, String b)...  
-    - In the second case, it is possible to perform operations by specifying a constant or a previously stored tensor using a string.
+#### Immediate Input Functions
+- You can now pass tensors directly to operators without calling `put()` first.  
+  - Example:  
+    `cb.add(Tensor a, Tensor b)`  
+    `cb.add(Tensor a, String b)`  
+  - In the latter, a tensor and an existing constant or queued tensor can be combined.
 
-- Added direct tensor output functions  
-  - You no longer need to explicitly use the get() function; operators now directly return Tensor objects.  
-  - All direct output functions are named with an 'I' appended to the operator name, except for transpose(T), im2col, and col2im (unchanged).  
-    - ex) Tensor c = cb.addI(String a, String b)...
+#### Immediate Output Functions
+- Operators can now return tensors directly without using `get()`.  
+- These are suffixed with **`I`**, except for `transpose(T)`, `im2col`, and `col2im`.  
+  - Example:  
+    `Tensor c = cb.addI(String a, String b)`
 
-- Added direct tensor input/output functions  
-  - Both of the above features can now be used simultaneously.  
-  - GPU-accelerated operations can now be performed using only operators, without put() and get().  
-    - ex) Tensor c = cb.addI(Tensor a, Tensor b)
-    
----
-
-## Version 1.3.1
-
-- Bug Fixes & Improvements
-
-1. **Broadcast Bug Fix**
-   - Fixed a bug where, during matmul execution, the broadcasting of the second matrix was dependent on the axis size of the first matrix.
-   - This issue caused matmul to produce completely incorrect outputs, which has now been resolved.
-
-2. **im2col Bug Fix & Enhancement**
-   - Fixed an issue where matrix rearrangement via im2col was not performed correctly.
-   - Additionally, optimized performance by rearranging the kernel size for faster execution.
-
-3. **dot Optimization**
-   - Improved the inner product kernel performance by introducing cuBLAS.
+#### Immediate Input & Output Combined
+- You can perform full GPU operations without `put()` or `get()`.  
+  - Example:  
+    `Tensor c = cb.addI(Tensor a, Tensor b)`
 
 ---
 
-## Version 1.4
+## **Version 1.3.1**
 
-- **Inner-Product and Operation Optimizations**
+### Bug Fixes & Optimization
 
-1. **cublas Strided Dot (Batched Inner Product)**
-   - Applies **stride-based batched inner products** to the Dot path so that identical operations across multiple batches are processed at once.
-   - Reduces kernel launch overhead and improves memory access patterns, increasing **throughput for inner-product operations**.
-   - Keeps a clear separation from the Matmul path, providing a fast path optimized for **vector and 2D inner products**.
+1. **Broadcast Bug in Matmul**
+   - Fixed incorrect broadcasting in `matmul` where the second matrix depended on the first’s axis length.
 
-2. **Simplified Transpose Flag — Limited to Dot/Matmul**
-   - When calling `reshape()`, specifying the **first axis as negative** marks the tensor as **transposed**.
-   - Example: `{ -M, N }` is treated as the transpose of `{ N, M }`.
-   - This rule **applies only to dot/matmul paths** and is **not available** for other operations.
+2. **`im2col` Bug & Optimization**
+   - Fixed improper matrix rearrangement.
+   - Reorganized kernel size mapping for performance optimization.
 
-3. **VRAM Caching Policy and Internal Behavior Optimization**
-   - In **GPU mode**, tensors produced by operations **remain in VRAM by default**.
-   - Minimizes **Host↔Device copies** in subsequent ops, improving performance in chained executions.
-   - Refined internal `flush/check` procedures to reduce unnecessary transfers and ensure **stable VRAM usage**.
+3. **Dot Optimization**
+   - Adopted cuBLAS backend for accelerated dot product kernel.
 
-4. **Shortened Internal Paths for Inner Product / General Ops**
-   - Streamlined the `gatedMemory → execute → push` flow and reinforced **intermediate buffer reuse** to reduce **copies and allocations**.
-   - Strengthened **pre-validation** for broadcast/axis operations/transpose flags to lower runtime branching overhead.
-   - Removed the **operation-variable recovery step**, further improving **speed and memory efficiency**.
+---
 
-> **Compatibility**: No changes to the public API. The transpose-flag feature is optional and only active when a negative first axis is used.
+## **Version 1.4**
+
+### **Dot and General Operation Optimization**
+
+1. **Added cuBLAS Strided Dot (Batch Dot Product)**
+   - Enabled **stride-based batched dot product** to process multiple inputs simultaneously.  
+   - Reduced kernel launch overhead and improved memory access pattern, increasing throughput.  
+   - Remains separated from `matmul` for optimized 1D/2D vector operations.
+
+2. **Simplified Transpose Flag — for dot/matmul only**
+   - In `reshape()`, specifying a **negative first axis** automatically marks the tensor as transposed.  
+     Example: `{ -M, N }` = equivalent to `{ N, M }` for internal execution.  
+   - This rule applies **only to dot/matmul**.
+
+3. **VRAM Caching Policy Introduced**
+   - In GPU mode, results remain **cached in VRAM** for reuse in subsequent operations.  
+   - Minimizes host↔device copy overhead and stabilizes performance.  
+   - Internal `flush/check` logic refined for reliability.
+
+4. **Optimized Internal Execution Path**
+   - Streamlined `gatedMemory → execute → push` process.  
+   - Reduced redundant allocation and copy overhead.  
+   - Pre-validation for broadcast, axis ops, and transpose flags.  
+   - Removed unnecessary variable recovery step → **higher speed and memory efficiency**.
+
+> **Compatibility:**  
+> No API changes. Transpose flag is optional (applies only if negative axis used).
+
+---
+
+## **Version 1.5 || 20251112**
+
+### **Massive Function Expansion & Overload Unification**
+
+#### 1. Tensor Class Enhancements
+- Added `slice`, `vstack`, `hstack`, `stack`
+- Added `Tensor(wav/csv)` `Tensor(float[][])` constructors
+- Unified WAV format naming → `"wav_16000_32"`
+- Improved function documentation (Javadoc)
+
+#### 2. Function Additions
+
+- **Unary:**  
+  `abs, neg, square, sqrt, rsqrt, log, log2, ln, exp, reciprocal, 
+    sin, cos, tan, sinh, cosh, tanh, asin, acos, atan, asinh, acosh, atanh, 
+    step, sigmoid, relu, leakRelu, softplus, 
+    round, ceil, floor, not, deg2rad, rad2deg`
+
+- **Binary:**  
+  `add, sub, mul, div, pow, mod, gt, lt, ge, le, eq, ne, and, or`
+
+- **Axis Cascade:**  
+  `sum, mean, var, std, max, min`
+
+- **Axis:**  
+  `accumulate, compress, expand, axisMax, axisMin, axisVar, axisStd, argMax, argMin`
+
+#### 3. Operation Groups Added
+
+- **Algebra:**  
+  `l2normalize, dot, matmul, transpose, 
+    trace, inverse, eigen, svd, det, qr, cholesky, rank, 
+    normalize, standardize, affine, softmax`
+
+- **Audio:**  
+  `low/mid/high/All/preEmphasis, 
+    applyWindow, applyFilter, 
+    fft, rfft, ifft, powfft, magfft, phasefft, 
+    low/mid/high/All/boost, spectrogram, dct, mfcc, 
+    makeMelFilter, makeBarkFilter, makeErbFilter, makeChromaFilter, 
+    makeGaussianWindow, makeRectWindow, makeHannWindow, makeHammingWindow, makeBartlettWindow, makeKaiserWindow`
+
+- **Image:**  
+  `rotate, shift, translate, resize, crop, mask, pad, 
+    boxBlur, gaussianBlur, medianBlur, flipH, flipV, 
+    grayScale, chSplit, chMerge, 
+    im2col1D, col2im1D, im2col2D, col2im2D`
+
+- **Scalar:**  
+  `L1Norm, L2Norm, LinfNorm, 
+    L1Dist, L2Dist, LinfDist, cosDist, cosSim, 
+    mse, bce, cee, mae, rmse, mape, 
+    focal, perplexity, dice, iou`
+
+- **Utility:**  
+  `clip, softClip, sigClip, tanhClip, logClip`
+
+#### 4. Bug Fixes & Optimization
+- Internal stability improvements  
+- Performance optimization for multi-type tensor operations  
+
+---
+
